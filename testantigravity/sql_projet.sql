@@ -71,7 +71,7 @@ CREATE TABLE personnel(
 CREATE TABLE ligne_de_commande(
    id_ligne_de_commande INT AUTO_INCREMENT,
    date_livraison DATE,
-   quantité INT,
+   quantite INT,
    id_pompe_a_chaleur INT NOT NULL,
    PRIMARY KEY(id_ligne_de_commande),
    FOREIGN KEY(id_pompe_a_chaleur) REFERENCES pompe_a_chaleur(id_pompe_a_chaleur)

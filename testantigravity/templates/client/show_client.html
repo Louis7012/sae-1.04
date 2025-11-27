@@ -23,14 +23,14 @@
     <tbody>
         {% for client in clients %}
         <tr>
-            <td>{{ client.Id_Client }}</td>
+            <td>{{ client.id_client }}</td>
             <td>{{ client.nom_client }}</td>
             <td>{{ client.prenom_client }}</td>
             <td>{{ client.adresse }}</td>
             <td>{{ client.telephone }}</td>
             <td>
-                <a href="/client/edit?id={{ client.Id_Client }}" class="btn btn-small">Modifier</a>
-                <a href="/client/delete?id={{ client.Id_Client }}" class="btn btn-small btn-danger">Supprimer</a>
+                <a href="/client/edit?id={{ client.id_client }}" class="btn btn-small">Modifier</a>
+                <a href="/client/delete?id={{ client.id_client }}" class="btn btn-small btn-danger">Supprimer</a>
             </td>
         </tr>
         {% endfor %}

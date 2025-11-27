@@ -10,7 +10,7 @@
         <label for="id_modele">Modèle :</label>
         <select name="id_modele" id="id_modele" required>
             {% for modele in modeles %}
-            <option value="{{ modele.Id_modèle }}">{{ modele.nom_modèle }} - {{ modele.marque }}</option>
+            <option value="{{ modele.Id_modele }}">{{ modele.nom_modele }} - {{ modele.marque }}</option>
             {% endfor %}
         </select>
     </div>

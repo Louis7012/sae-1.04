@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BDD1</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="markdown-pandoc-amV4.css" />
+  <link rel="icon" href="favicon.ico" />
+  <title>BDD</title>
+</head>
+<body>
+<h1 id="objectif-final">Objectif final</h1>
+<p>Chaque étudiant doit réaliser <strong>une interface WEB pour
+afficher/ajouter/modifier/supprimer une des tables du MCD</strong>.</p>
+<p><br></p>
+<p>L’évaluation, compte tenu de la diversité des sujets, portera sur
+:</p>
+<ul>
+<li>La <strong>complexité</strong> de l’interface du CRUD (jointure avec
+la/les clé(s) étrangère(s)).</li>
+<li>La présence de clé(s) étrangère(s) gérée(s) sous forme de liste
+déroulante.</li>
+<li>La complexité de(s) l’état(s).</li>
+<li>La <strong>qualité du jeu de tests</strong>.</li>
+<li>La qualité de l’<strong>interface</strong> (surtout en terme
+d’<strong>utilisabilité</strong>)</li>
+</ul>
+<br> <br>
+<div class="important">
+<p>ATTENTION : utiliser le code vu en cours, l’utilisation d’une IA
+générative pour produire un code non conforme au TP vu en cours
+entraînera une grosse pénalité.</p>
+<p>Une pénalité importante sera appliquée si les règles suivantes ne
+sont pas respectées :</p>
+<ul>
+<li>Pas de boucle Python dans le fichier <em>app.py</em> (par exemple
+avec le mot-clé <code>next</code> ou <code>for</code>).</li>
+<li>Pas d’utilisation des mots-clés <code>with</code> et
+<code>try</code> en Python (gestion des exceptions).</li>
+<li>Pas d’utilisation de la fonction <code>url_for</code> pour gérer une
+route.</li>
+<li>Pas d’utilisation de route paramétrée <code>/route/&lt;id&gt;</code>
+à la place des routes avec paramètres GET <code>/route?id=</code>
+(paramètres de requête).</li>
+<li>Pas d’utilisation de JavaScript.</li>
+<li>Pas d’utilisation de module Python non vu en TP.</li>
+<li><strong>Pas d’utilisation de code que vous ne maîtrisez
+pas</strong></li>
+</ul>
+<p><br></p>
+<ul>
+<li>Ne pas utiliser l’attribut “required” dans tous les champs INPUT.
+Utilisez le uniquement pour les clés étrangères et le champ “nom”(ou
+libellé) de l’enregistrement le plus important qui permet d’identifier
+l’enregistrement.</li>
+<li>Ne pas utiliser “request.method” dans le fichier app.py.</li>
+<li>Ne pas utiliser de condition “SI” (“IF”) dans le fichier
+app.py.</li>
+</ul>
+</div>
+<p><br></p>
+<h1 id="schéma-et-définition-du-travail-de-chacun-code-sql">schéma et
+définition du travail de chacun ; code SQL</h1>
+<p>Une fois vos modèles réalisés (MCD et MLD ou MR) : Il faudra
+<strong>choisir une table</strong> pour chaque étudiant.</p>
+<p><br></p>
+<p>Cette <strong>table doit obligatoirement posséder une clé étrangère
+au minimum (une liste déroulante au minimum)</strong>.</p>
+<p><br></p>
+<p>Cette table est <strong>définie avec l’enseignant</strong> qui suit
+votre travail de SAE.</p>
+<p>Sur certains schémas, il faudra peut être modifier votre MCD pour
+simplifier la réalisation de l’interface</p>
+<figure>
+<img src="img_flask/sae_modif_mcd.png" style="width:5cm"
+alt="voir la partie sur la modification du schéma" />
+<figcaption aria-hidden="true">voir la partie sur la modification du
+schéma</figcaption>
+</figure>
+<h1 id="application-à-réaliser">Application à réaliser</h1>
+<p>Chaque étudiant doit réaliser :</p>
+<ul>
+<li>Une <strong>interface web permettant d’afficher, ajouter, modifier
+et supprimer</strong> des données d’une des tables du MCD (“CRUD”).</li>
+<li><strong>Un ou plusieurs états</strong>, paramétrés ou non, en
+rapport avec cette table. Cet état consiste à afficher le résultat d’une
+requête avec une jointure.</li>
+</ul>
+<figure>
+<img src="img_flask/sae_s1_crud1.png" style="width:7cm"
+alt="CRUD : Create Read Update Delete" />
+<figcaption aria-hidden="true">CRUD : Create Read Update
+Delete</figcaption>
+</figure>
+<p><br> La complexité de réalisation sera prise en compte. Ne pas à
+choisir les tables les moins complexes pour les interfaces. <span
+class="importantInline"><strong>Il est obligatoire de choisir une table
+qui possède au moins une clé étrangère (une liste déroulante)</strong>
+.</span></p>
+<p><br> La conception visuelle (design) ne sera que très peu évaluée.
+Seule <strong>l’<a
+href="https://fr.wikipedia.org/wiki/Utilisabilit%C3%A9"
+target="_blank">utilisabilité</a></strong> de l’interface sera beaucoup
+prise en compte lors de l’évaluation.</p>
+<h2 id="menu-commun-à-réaliser">Menu commun à réaliser :</h2>
+<ul>
+<li><p>Le menu doit permettre un accès facile à chaque table et chaque
+état, <strong>tout en indiquant l’auteur du travail</strong>.</p></li>
+<li><p>Réalisez un menu avec les noms des tables auxquelles on peut
+accéder pour afficher, ajouter, modifier ou supprimer des données.
+Ajouter entre parenthèses le nom de l’auteur (nom de
+l’étudiant).</p></li>
+<li><p>La page d’accueil doit indiquer le numéro de groupe SAE, le
+groupe de TP et les étudiants qui font partie du groupe.</p></li>
+</ul>
+<figure>
+<img src="img_flask/sae_s1_menu_1.png" style="width:15cm"
+alt="exemple de page d’accueil et de menu" />
+<figcaption aria-hidden="true">exemple de page d’accueil et de
+menu</figcaption>
+</figure>
+<p>Le menu permet d’accéder rapidement au “CRUD” réalisé par un
+étudiant. Le menu permet également d’accéder à l’état réalisé par un
+étudiant <strong>en sachant qui est l’auteur du travail</strong>.</p>
+<figure>
+<img src="img_flask/sae_s1_menu_2.png" style="width:15cm"
+alt="exemple de page d’accueil et de menu" />
+<figcaption aria-hidden="true">exemple de page d’accueil et de
+menu</figcaption>
+</figure>
+<h2
+id="interface-crud-pour-afficher-ajouter-modifier-et-supprimer-des-données-dans-une-table">Interface
+CRUD pour afficher, ajouter, modifier et supprimer des données dans une
+table</h2>
+<p><strong>CRUD : Create, Read, Update, Delete</strong></p>
+<p><br></p>
+<ul>
+<li><p><strong>AFFICHAGE</strong> : Essayez d’inclure les informations
+les plus pertinentes dans vos requêtes et <span
+class="importantInline">utilisez autant que possible des
+jointures</span></p></li>
+<li><p>Exemple : Lors de l’affichage des données, vous pouvez afficher
+le type de chambre (avec son identifiant) ainsi que l’état de la chambre
+(avec son identifiant).</p></li>
+</ul>
+<figure>
+<img src="img_flask/sae_s1_show_1.png" style="width:15cm"
+alt="exemple d’affichage d’une table" />
+<figcaption aria-hidden="true">exemple d’affichage d’une
+table</figcaption>
+</figure>
+<h2
+id="interfaces-formulaires-pour-ajoutermodifier-les-données">Interfaces
+(<strong>formulaires</strong>) pour ajouter/modifier les données :</h2>
+<ul>
+<li><p>Lors de la modification d’un enregistrement, le formulaire
+contient la valeur de chaque champ de l’enregistrement en base de
+données.</p></li>
+<li><p>Utilisez une/des <span class="importantInline">liste(s)
+déroulante(s)</span> pour saisir la/les valeur(s) d’une/des clé(s)
+étrangère(s) reliée(s) à une/des clé(s) primaire(s) (entier)</p>
+<ul>
+<li>Pour l’ajout d’un enregistrement, ne proposez pas de valeur par
+défaut. L’utilisateur est obligé de choisir une valeur.</li>
+<li>Pour la saisie d’une clé étrangère (entier), afficher à
+l’utilisateur dans les valeurs possibles de la clé étrangère , lorsque
+possible, un texte plus explicite issu de l’autre table pour faciliter
+la compréhension.</li>
+<li>Lors de la modification d’un enregistrement, la valeur proposée par
+défaut doit être celle présente dans la base de données.</li>
+</ul></li>
+</ul>
+<p>Dans votre jeu de test, choisissez des noms des noms qui permettent
+de désigner clairement un objet. Par exemple, évitez de désigner un
+véhicule par un numéro qui est l’identifiant de la clé primaire
+automatique ( Dans une flotte de véhicules, il est possible de remplacer
+le numéro 3 par un nouveau véhicule ayant également le numéro 3, mais
+qui peut être différent.)</p>
+<!--
+
+un seul curseur par route
+ 
+
+-->
+<h2 id="suppression-des-données">suppression des données :</h2>
+<ul>
+<li>Il est souhaitable et recommandé de vérifier la possibilité de
+supprimer les données avant d’effectuer la suppression.</li>
+</ul>
+<h1 id="états">États :</h1>
+<p>Dans le contexte des bases de données, un état fait référence à une
+représentation figée des données stockées à un moment donné. Il s’agit
+d’un instantané ou d’une vue spécifique des données dans un certain
+état, généralement obtenu à partir d’une requête SQL de type “SELECT”
+exécutée sur la base de données.</p>
+<p>Un état permet d’afficher les informations contenues dans la base de
+données selon certains critères spécifiés, tels que des filtres, des
+agrégations ou des jointures. Il peut être utilisé pour générer des
+rapports, des factures, des statistiques ou tout autre type de sortie
+qui présente les données de manière structurée et significative.</p>
+<p>L’idée principale d’un état est de fournir une vue claire et
+cohérente des données à un moment précis, facilitant ainsi leur analyse,
+leur compréhension et leur utilisation pour des besoins spécifiques.</p>
+<p><br></p>
+<p>Une fiche de paye, une facture, un bon de livraison sont des états.
+<a href="https://powerbi.microsoft.com/fr-fr/data-dashboards/"
+target="_blank">Un <strong>tableau de bord de données</strong></a>
+permet d’afficher, suivre, analyser des données.</p>
+<ul>
+<li><strong>réaliser au moins un état par étudiant avec des fonctions
+d’agrégation</strong> et <strong>des jointures</strong>.</li>
+</ul>
+<p><br></p>
+<p>La note sera d’autant meilleure que les états seront complexes à
+réaliser :</p>
+<figure>
+<img src="img_flask/sae_s1_etat_1.png" style="width:15cm"
+alt="exemple d’état “minimum” (capture d’écran d’un ancien projet)" />
+<figcaption aria-hidden="true">exemple d’état “minimum” (capture d’écran
+d’un ancien projet)</figcaption>
+</figure>
+<figure>
+<img src="img_flask/sae_s1_etat_2.png" style="width:15cm"
+alt="exemple d’état très complet (capture d’écran d’un ancien projet)" />
+<figcaption aria-hidden="true">exemple d’état très complet (capture
+d’écran d’un ancien projet)</figcaption>
+</figure>
+<h2 id="paramétrage-dun-état">paramétrage d’un état</h2>
+<ul>
+<li>Ces états peuvent être paramétrés. (exemples : saisir 2 dates dans
+un formulaire et afficher les enregistrements d’une table jointe à une
+autre table (avec des fonctions d’agrégation) lorsque les
+enregistrements sont compris entre les 2 dates saisies )</li>
+</ul>
+<figure>
+<img src="img_flask/sae_s1_etat_3.png" style="width:15cm"
+alt="paramétrage d’un état (capture d’écran d’un ancien projet)" />
+<figcaption aria-hidden="true">paramétrage d’un état (capture d’écran
+d’un ancien projet)</figcaption>
+</figure>
+<p>Remarque : les paramètres peuvent être saisis dans un formulaire
+indépendant.</p>
+<hr>
+<h1 id="livrable-1">Livrable 1</h1>
+<div class="important">
+<p><a href="https://moodle.univ-fcomte.fr/mod/assign/view.php?id=553978"
+target="_blanck_">Lien sur Moodle</a></p>
+<p>Vous devez fournir un script SQL nommé
+“<strong>sql_projet.sql</strong>” qui permettra de tester votre
+application. Ce script SQL doit :</p>
+<ul>
+<li><p>Supprimer toutes les tables si elles existent</p></li>
+<li><p>créer toutes les tables :</p>
+<ul>
+<li>récupérer le script du logiciel Looping</li>
+<li>renommer les colonnes de façon à avoir toutes les colonnes en
+<strong>snake-case</strong> et uniquement le caractère spécial
+“underscore”</li>
+<li>renommer les clés primaires de façon à avoir comme nom : “id_table”
+ou “table” et le nom de la table</li>
+<li>renommer les clés étrangères de façon à avoir comme nom : “table_id”
+ou “table” et le nom de la table</li>
+</ul></li>
+<li><p>Insérer des valeurs dans toutes les tables pour tester les
+interfaces que vous allez réaliser. Parfois quelques enregistrements
+(tuples) suffisent, mais parfois il en faudra plus.</p></li>
+<li><p>Écrire au moins 2 ou 3 requêtes avec une ou plusieurs fonctions
+d’agrégation et des jointures. Le jeu de test (les instructions “insert”
+mentionnées ci-dessus) doit permettre de vérifier que ces requêtes
+fonctionnent correctement. <!-- moodle  à modifier ou pas --> Nous avons
+peu abordé les jointures mais vous devriez être capables d’en écrire
+quelques-unes sans grosse difficulté en vous documentant sur le
+web.</p></li>
+</ul>
+<hr />
+<ul>
+<li><p>Veuillez joindre votre MCD, nommé “<strong>mcd.loo</strong>” qui
+est un fichier “looping”.</p></li>
+<li><p>Créer un fichier PDF de 2 pages (ou 2 fichier PDF d’une page
+chacun), ce fichier a pour nom : <strong>MCD_MLD.pdf</strong></p>
+<ul>
+<li>Page 1 : Elle doit contenir le MCD qui utilise pleinement et
+harmonieusement la page. Ajoutez vos noms, votre groupe de TP (par
+exemple A2) et votre groupe de SAE sur cette page.</li>
+<li>Page 2 : Elle doit contenir le MLD qui utilise pleinement et
+harmonieusement la page. Ajouter vos noms, votre groupe de TP (par
+exemple A2) et votre groupe de SAE sur cette page.</li>
+</ul></li>
+<li><p><span class="important"><strong>ATTENTION, un malus sera appliqué
+si le groupe et les noms des étudiants ne figurent pas sur le MCD et le
+MLD</strong></span></p></li>
+</ul>
+exemple de modification :
+<table>
+<tr>
+<td>
+<figure>
+<img src="img_flask/sae_mcd_pdf.png" style="width:7cm" alt="" />
+<figcaption>
+exemple de fichier PDF (format A4) avec un MCD qui sera imprimé
+</figcaption>
+</figure>
+</td>
+<td>
+<figure>
+<img src="img_flask/sae_mld_pdf.png" style="width:7cm" alt="" />
+<figcaption>
+exemple de fichier PDF (format A4) avec un MLD qui sera imprimé
+</figcaption>
+</figure>
+</td>
+</tr>
+</table>
+</div>
+<hr />
+<h1 id="livrable-final-s1-bdd">Livrable final S1 BDD</h1>
+<div class="important">
+<p><!--style="font-size: 150%;" --></p>
+<p><strong>Le projet doit être rendu sur <a
+href="https://moodle.univ-fcomte.fr/course/view.php?id=19235#section-3">Moodle
+en utilisant le lien suivant</a></strong> d’ici <span
+style="color:red"><strong>début décembre (voir sur
+moodle)</strong></span>.</p>
+<ul>
+<li>Veuillez placer votre projet dans un dossier portant le nom suivant
+: GROUPE_nom (votre numéro de groupe de SAE suivi du nom du référent du
+groupe, exemple “19_millet”).</li>
+<li>Archiver votre projet (le nom de l’archive doit être le nom du
+projet) avec une extension .zip ou .tar.gz (pas de format Microsoft)
+<ul>
+<li>Attention : Pas d’archive dans une archive =&gt; pénalité</li>
+</ul></li>
+</ul>
+<p>Ce dossier doit contenir les éléments suivant :</p>
+<ul>
+<li>Un fichier nommé “<strong>sql_projet.sql</strong>”, qui est votre
+script SQL à jour pour supprimer, créer toutes les tables dans l’ordre,
+puis insérer les enregistrements dans le bon ordre (un jeu de test).
+<!--* Un fichier nommé "**mcd.loo**", qui est votre MCD à jour dessiné avec le logiciel Looping.--></li>
+<li>Votre application, comprenant un fichier “<strong>app.py</strong>”,
+un dossier “<strong>templates</strong>”, un dossier
+“<strong>static</strong>”, et éventuellement un script shell pour lancer
+l’application (ne pas inclure de dossier <em>venv</em> ou des élèments
+inutiles(dossier .idea, fichiers de compilation python ….)).</li>
+</ul>
+<p>Votre application doit être fonctionnelle sur une machine de l’IUT
+avec la commande “python app.py” dans un environnement local où les
+paquets “pymysql” et “flask” sont installés.</p>
+<p>En remplaçant le login et le motDePasse des instructions ci-dessous
+par votre login et mot de passe sur le serveur MySQL de l’IUT, les 3
+commandes ci-dessous doivent fonctionner pour tester votre application
+(dans un terminal ouvert dans votre dossier de projet) :</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>wine <span class="op">/</span>opt<span class="op">/</span>looping<span class="op">-</span>mcd<span class="op">/</span>Looping.exe mcd.loo</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mysql <span class="co">--user=login  --password=motDePasse --host=serveurmysql --database=BDD_login &lt; sql_projet.sql</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>python app.py</span></code></pre></div>
+<p><br></p>
+<p>Bareme :</p>
+<p><img src="img_flask/sae_s1_bareme_2024.png" style="width:20cm" /></p>
+</div>
+<p>FAQ :</p>
+<p>Les principaux problèmes rencontrés :</p>
+<ul>
+<li>Clé primaire composée : si la table est issue d’une relation, la clé
+primaire est souvent une clé composée :</li>
+</ul>
+<p>La clé primaire n’est plus un entier avec un compteur (int
+aut_increment) mais plutôt une combinaison de clés étrangères sur
+d’autres clés primaires. Dans ce cas il est recommandé de modifier le
+schéma afin de faciliter les opérations de modification ou de
+suppression d’un enregistrement (voir annexe ci-dessous).</p>
+<ul>
+<li><p>Affichage des enregistrements : Il est conseillé d’afficher en
+plus des clés étrangères (de type <em>int</em>) un autre champ de la
+table jointe qui soit plus explicite pour l’utilisateur. De plus, il est
+recommandé de trier les enregistrements en utilisant la colonne qui sera
+la plus utile pour l’utilisateur.</p></li>
+<li><p>Lors de l’ajout d’un enregistrement, il faut saisir les valeurs
+des clés étrangères. Il est possible d’utiliser des champs “INPUT” mais
+il est préférable d’utiliser des listes déroulantes. Chaque liste
+déroulante permet de saisir les valeurs possibles de cette clé pour
+respecter <a
+href="https://fr.wikipedia.org/wiki/Cl%C3%A9_%C3%A9trang%C3%A8re"
+target="_blank">la contrainte d’intégrité référentielle</a>.</p></li>
+</ul>
+<p><br></p>
+<p><strong>Il est possible d’ajouter des colonnes supplémentaires dans
+les tables</strong></p>
+<h1 id="annexe-aide-pour-réaliser-un-crud">Annexe : aide pour réaliser
+un CRUD</h1>
+<p>Les associations dans les M.C.D. Merise sont souvent transformées en
+tables dites “table de liaison ou table de jonction” dans les MLD (à
+l’exception des <a
+href="https://fr.wikipedia.org/wiki/Merise_(informatique)#Association_ou_relation"
+target="_blanck_">associations binaires</a> avec une cardinalité se
+terminant par 1)</p>
+<h2
+id="passage-dune-clé-primaire-composée-de-plusieurs-colonnes-à-une-clé-primaire-composée-dune-seule-colonne.">Passage
+d’une clé primaire composée de plusieurs colonnes à une clé primaire
+composée d’une seule colonne.</h2>
+<!-- chatgpt
+
+CRUD : faut il utiliser une clé primaire composée de plusieurs colonnes ou une clé primaire composée d'une seule colonne ?
+Si oui comment modifié le schéma ?
+￼
+
+comment respecter les contraintes d'une clé primaire composée de plusieurs colonnes en ajoutant une colonne avec un identifiant unique pour chaque enregistrement comme clé primaire ?
+
+
+
+quelles contraintes doit on ajouter ?
+
+propose un exemple en SQL
+
+-->
+<p>exemple de modification :</p>
+<table>
+<tr>
+<td>
+<figure>
+<img src="img_flask/sae_mcd_1.png" style="width:7cm" alt="" />
+<figcaption>
+MCD
+</figcaption>
+</figure>
+</td>
+<td>
+<figure>
+<img src="img_flask/sae_mld_1.png" style="width:7cm" alt="" />
+<figcaption>
+MLD
+</figcaption>
+</figure>
+</td>
+</tr>
+</table>
+<p>l’objectif est de remplacer les tables issues de relation</p>
+<table>
+<tr>
+<td>
+<figure>
+<img src="img_flask/sae_mcd_2.png" style="width:7cm" alt="" />
+<figcaption>
+MCD
+</figcaption>
+</figure>
+</td>
+<td>
+<figure>
+<img src="img_flask/sae_mld_2.png" style="width:7cm" alt="" />
+<figcaption>
+MLD
+</figcaption>
+</figure>
+</td>
+</tr>
+</table>
+<p><br></p>
+<ul>
+<li>La cardinalité <code>1,1</code> ajoute une contrainte
+<code>NOT NULL</code> sur chaque attribut (colonne) qui est une clé
+étrangère dans le SQL.</li>
+<li>Il est également possible d’ajouter une contrainte d’unicité sur les
+clés étrangères pour garantir l’intégrité des données.</li>
+</ul>
+<p><br></p>
+<ul>
+<li>SQL pour garantir l’intégrité des données, vous pouvez appliquer une
+contrainte d’unicité sur les colonnes correspondant aux clés étrangères
+pour éviter la présence de doublons. :</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode sql"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">CONSTRAINT</span> uk_projection  <span class="kw">UNIQUE</span> (num_salle, id_film, id_creneau)</span></code></pre></div>
+<p><a
+href="https://www.sqlservertutorial.net/sql-server-basics/sql-server-unique-constraint/"
+target="_blanck">doc unique key</a> - <a
+href="https://www.mysqltutorial.org/mysql-unique/" target="_blanck">doc
+index key</a></p>
+<ul>
+<li>Lors de la création ou de la modification d’un enregistrement, , il
+est recommandé de vérifier si un autre enregistrement ne possède pas les
+mêmes valeurs de clés étrangères (telles que num_salle, id_film,
+id_creneau dans l’exemple ci-dessus). Dans le cas où un autre
+enregistrement avec les mêmes valeurs existent déjà, il est préférable
+d’informer l’utilisateur et de l’inviter à saisir des informations
+différentes pour les clés étrangères.</li>
+</ul>
+<h3 id="création-dun-enregistrement">Création d’un enregistrement :</h3>
+<ul>
+<li>Lors de la validation du formulaire, vous pouvez effectuer une
+requête SQL pour sélectionner les enregistrements existants ayant les
+mêmes valeurs de clés étrangères que celles saisies dans le formulaire.
+Si un enregistrement correspondant est trouvé, vous pouvez afficher un
+message d’erreur à l’utilisateur et rediriger vers la route appropriée
+pour créer cet enregistrement.</li>
+</ul>
+<h3 id="modification-dun-enregistrement">Modification d’un
+enregistrement :</h3>
+<p>Pour modifier un enregistrement avec un formulaire,, vous pouvez
+stocker la clé primaire dans un (des) champ(s) caché(s) du formulaire.
+Cela permet de récupérer l’identifiant unique de l’enregistrement lors
+de la soumission du formulaire, afin de savoir quel enregistrement doit
+être modifié dans la base de données.</p>
+<pre><code>&lt;form  action=&quot;/projection/update&quot;  method=&quot;post&quot; &gt;
+      &lt;input type=&quot;hidden&quot; name=&quot;init_num_salle&quot; value=&quot;{{ projection.num_salle }}&quot;&gt;
+      &lt;input type=&quot;hidden&quot; name=&quot;init_id_film&quot; value=&quot;{{ projection.id_film }}&quot;&gt;
+      &lt;input type=&quot;hidden&quot; name=&quot;init_id_creneau&quot; value=&quot;{{ projection.id_creneau }}&quot;&gt;
+
+      &lt;select name=&quot;num_salle&quot;&gt;
+
+      
+      ....
+
+      &lt;button class=&quot;btn  btn-outline-danger&quot; &gt; Modifier &lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<h1 id="annexes-erreurs-classiques">Annexes : erreurs classiques</h1>
+<h2 id="encodage-des-noms-de-fichiers-et-des-noms-de-dossiers">Encodage
+des noms de fichiers et des noms de dossiers</h2>
+<p>Attention, pour les développeurs travaillant sur des <strong>machines
+avec un système d’exploitation Windows</strong>, il est important de
+prendre en compte les erreurs potentielles liées à l’encodage des
+caractères.</p>
+<p><br></p>
+<p>Lors du développement d’une application qui manipule des
+<strong>caractères spéciaux ou des langues non-anglaises</strong>, il
+est crucial de s’assurer que l’encodage des caractères est correctement
+géré pour éviter les problèmes d’affichage ou de traitement des
+données.</p>
+<ul>
+<li>attention aux erreurs liées à l’encodage des caractères dans le nom
+des fichiers et des dossiers:</li>
+</ul>
+<p><img src="img_flask/sae_err_1.png" /></p>
+<h2 id="configuration-de-mysql">Configuration de MySql</h2>
+<p>MySql est moins “strict” par défaut sur <strong>Windows</strong> et
+<strong>parfois</strong> sur <strong>Linux</strong>:</p>
+<p>Alors que MySQL est sensible par défaut à la casse (au niveau des
+noms de base et de table)dans la plupart des distributions Unix, il ne
+l’est pas pour Windows! En revanche, concernant les noms de colonnes,
+index, alias de colonnes, déclencheurs et procédures MySQL n’est pas
+sensible à la casse tous systèmes confondus. En fait, tous ces noms sont
+stockés en minuscules dans le dictionnaire de données.<br />
+La variable <strong>lower_case_table_names</strong> permet de forcer la
+sensibilité à la casse pour les noms des tables et des bases de données
+(si elle vaut 0, la sensibilité à la casse est active et les noms sont
+stockés en minuscules; 1, pas de sensibilité à la casse et les noms sont
+stockés en minuscules; 2, pas de sensibilité à la casse et les noms sont
+stockés en respectant la casse). Je vous invite à positionner cette
+variable à 0 de manière à homogénéiser le codage et à contrôler un peu
+plus l’écriture de vos instructions SQL. De plus, c’est l’option par
+défaut sur Linux.</p>
+<p><code>SELECT @@lower_case_table_names;</code> : Cette requête
+retournera la valeur actuelle de la variable
+<strong>lower_case_table_names</strong> qui doit être à
+<code>0</code></p>
+<p><br></p>
+<ul>
+<li>Attention aussi au mode de fonctionnement de MySQL, qui peut être
+moins strict sur les machines individuelles par rapport aux machines de
+l’IUT.</li>
+</ul>
+<p>Pour vérifier le mode SQL en cours d’utilisation dans votre serveur
+MySQL, vous pouvez exécuter la requête suivante :
+<code>SELECT @@sql_mode;</code>.<br />
+Cette requête renverra la valeur actuelle de la variable
+<strong>sql_mode</strong>, qui représente le mode SQL en cours
+d’utilisation.<br />
+Le résultat sera une chaîne de caractères contenant les différents modes
+SQL activés et leurs paramètres. Assurez-vous de trouver la valeur
+<code>ONLY_FULL_GROUP_BY</code> dans la chaîne de caractères renvoyée.
+Si ce mode n’est pas activé, cela signifie que MySQL peut être moins
+strict en ce qui concerne la clause <strong>GROUP BY</strong> dans vos
+requêtes, ce qui peut entraîner des résultats inattendus. Il est
+possible que votre application fonctionne correctement sur votre
+machine, mais rencontre des erreurs lorsqu’elle est exécutée sur une
+machine de l’IUT.</p>
+<p><br> En résumé, tester sur votre machine :</p>
+<pre><code>SELECT @@lower_case_table_names;
+-- la réponse devrait être 0
+
+SELECT @@sql_mode;
+-- la réponse devrait contenir le mot clé ONLY_FULL_GROUP_BY</code></pre>
+<p><br> <br> Si la configuration de <strong>MySQL</strong> n’est pas
+bonne :</p>
+<ul>
+<li>sur <strong>Windows</strong> : rechercher le fichier
+<strong>my.ini</strong> qui se trouve à coté du fichier “mysql.exe”.
+Pour trouver ce fichier, utiliser la commande :
+<code>dir /s *my.ini*</code> depuis la racine <code>C:\</code></li>
+<li>sur <strong>Linux</strong> : rechercher le fichier
+<strong>my.cnf</strong>. Pour trouver ce fichier, utiliser la commande :
+<code>find / -name '*my.cnf' 2&gt;/dev/null</code><br />
+</li>
+</ul>
+<p>Éditer le fichier de configuration <code>my.ini</code> ou
+<code>my.cnf</code> en tant que root. Dans ce fichier, sous la section
+serveur identifiée par <code>[mysqld]</code> si elle existe, ajouter les
+lignes ci-dessous (créer la section si elle n’existe pas):</p>
+<pre><code>[mysqld]
+lower_case_table_names=0
+local_infile=ON
+sql_mode = &quot;ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION&quot;
+
+[mysql]
+local_infile=ON</code></pre>
+<p>Pour connaître le dossier du fichier <code>my.cnf</code>
+(Linux,MacOS) ou <code>my.ini</code> (Windows), exécutez la commande
+<code>mysql --help --verbose</code>. L’information est généralement
+affichée au début de la sortie. Sur Linux, utilisez <code>sudo</code> en
+début de commande pour obtenir les privilèges de superutilisateur.</p>
+<p><br><br></p>
+<p>Vous pouvez vérifier l’encodage du serveur MySQL par défaut avec la
+commande SQL <code>SHOW VARIABLES LIKE 'character_set_%';</code>. Cette
+requête renvoie les variables liées à l’encodage dans MySQL, y compris
+la variable <em>character_set_server</em> qui indique l’encodage du
+serveur MySQL. Les dernières versions de MySQL utilisent par défaut
+<strong>utf8mb4</strong> qui convient parfaitement.</p>
+<!-- 
+
+
+relation [ManyToMany](https://en.wikibooks.org/wiki/Java_Persistence/ManyToMany)
+
+https://docs.microsoft.com/fr-fr/power-bi/guidance/relationships-many-to-many 
+
+[documentation](https://support.cpanel.net/hc/en-us/articles/360050089274-How-to-change-the-SQL-mode-in-MySQL-or-MariaDB){target=_blanck}
+
+-->
+<h2 id="test-de-lapplication">test de l’application</h2>
+<p><span class="modif">script de test du projet :</span> <br></p>
+<p><span class="modif">Un premier script extrait les archives
+<code>.tar.gz</code> et <code>.zip</code>, ce script recherche un
+dossier et copie un autre script <code>test_projet.sh</code> dans le
+dossier. Le script <code>test_projet.sh</code> se trouve au même niveau
+que le fichier app.py (une erreur est signalée dans le cas
+contraire).</span></p>
+<p><br></p>
+<p>script de test <code>test_projet.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+# mysql --user=login --password=secret --host=localhost BDD_s1_projet
+
+HOST=localhost
+LOGIN=login
+PASSWORD=secret
+DATABASE=BDD_s1_projet
+
+sed -i &quot;s/host=.*/host=\&quot;${HOST}\&quot;,/g&quot; app.py
+sed -i &quot;s/user=.*/user=\&quot;${LOGIN}\&quot;,/g&quot; app.py
+sed -i &quot;s/password=.*/password=\&quot;${PASSWORD}\&quot;,/g&quot; app.py
+sed -i &quot;s/database=.*/database=\&quot;${DATABASE}\&quot;,/g&quot; app.py
+
+projet=$(ls -l sql_projet.sql)
+if [ $? -ne 0 ]
+    then
+    echo -e &quot;\033[0;31m \n* pas de fichier sql_projet.sql \033[0m&quot;
+    nb_fic_sql=$(ls -l *.sql | wc -l)
+    if [ &quot;${nb_fic_sql}&quot; -eq &quot;1&quot; ]
+    then
+        NOM_FIC_SQL=$(echo *.sql)
+        cp &quot;$NOM_FIC_SQL&quot; sql_projet.sql
+        echo -e &quot;\033[0;32m \n* fichier copier $NOM_FIC_SQL sql_projet.sql \033[0m&quot;
+    else
+        echo -e &quot;\033[0;31m \n* pas de fichier ****.sql \033[0m&quot;
+        exit 2
+    fi  
+fi
+
+echo &quot;DROP DATABASE  IF EXISTS ${DATABASE}; CREATE DATABASE ${DATABASE};&quot; | mysql --user=${LOGIN} --password=${PASSWORD} --host=${HOST} ${DATABASE}
+mysql --user=${LOGIN} --password=${PASSWORD} --host=${HOST} ${DATABASE} &lt; sql_projet.sql
+
+echo &quot;mysql --user=${LOGIN} --password=${PASSWORD} --host=${HOST} ${DATABASE}&quot; &gt; connect.sh
+chmod a+x connect.sh
+gnome-terminal --tab -- ./connect.sh  &amp;
+
+# xed sql_projet.sql app.py &amp;
+
+killall python3
+flask --debug  --app app  run   --host 0.0.0.0  &amp;
+chromium 127.0.0.1:5000</code></pre>
+</body>
+</html>

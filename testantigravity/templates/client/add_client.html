@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}Ajouter un Client{% endblock %}
+
+{% block body %}
+<h1>Ajouter un Client</h1>
+
+<form action="/client/add" method="post">
+    <div class="form-group">
+        <label for="nom_client">Nom :</label>
+        <input type="text" name="nom_client" id="nom_client" required>
+    </div>
+
+    <div class="form-group">
+        <label for="prenom_client">Prénom :</label>
+        <input type="text" name="prenom_client" id="prenom_client" required>
+    </div>
+
+    <div class="form-group">
+        <label for="adresse">Adresse :</label>
+        <input type="text" name="adresse" id="adresse">
+    </div>
+
+    <div class="form-group">
+        <label for="telephone">Téléphone :</label>
+        <input type="text" name="telephone" id="telephone" maxlength="10">
+    </div>
+
+    <button type="submit" class="btn">Ajouter</button>
+    <a href="/client/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Liste des Clients{% endblock %}
+
+{% block body %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Nos Clients</h1>
+    <a href="/client/add" class="btn">Ajouter un Client</a>
+</div>
+
+{% if clients %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Adresse</th>
+            <th>Téléphone</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client.Id_Client }}</td>
+            <td>{{ client.nom_client }}</td>
+            <td>{{ client.prenom_client }}</td>
+            <td>{{ client.adresse }}</td>
+            <td>{{ client.telephone }}</td>
+            <td>
+                <a href="/client/edit?id={{ client.Id_Client }}" class="btn btn-small">Modifier</a>
+                <a href="/client/delete?id={{ client.Id_Client }}" class="btn btn-small btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucun client enregistré pour le moment.</p>
+{% endif %}
+{% endblock %}

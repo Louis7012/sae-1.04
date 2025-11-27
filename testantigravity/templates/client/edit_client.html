@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}Modifier un Client{% endblock %}
+
+{% block body %}
+<h1>Modifier un Client</h1>
+
+<form action="/client/edit" method="post">
+    <input type="hidden" name="id_client" value="{{ client.Id_Client }}">
+
+    <div class="form-group">
+        <label for="nom_client">Nom :</label>
+        <input type="text" name="nom_client" id="nom_client" value="{{ client.nom_client }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="prenom_client">Prénom :</label>
+        <input type="text" name="prenom_client" id="prenom_client" value="{{ client.prenom_client }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="adresse">Adresse :</label>
+        <input type="text" name="adresse" id="adresse" value="{{ client.adresse }}">
+    </div>
+
+    <div class="form-group">
+        <label for="telephone">Téléphone :</label>
+        <input type="text" name="telephone" id="telephone" value="{{ client.telephone }}" maxlength="10">
+    </div>
+
+    <button type="submit" class="btn">Enregistrer</button>
+    <a href="/client/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends "layout.html" %}
+
+{% block title %}Modifier une PAC{% endblock %}
+
+{% block body %}
+<h1>Modifier une Pompe à Chaleur</h1>
+
+<form action="/pac/edit" method="post">
+    <input type="hidden" name="id" value="{{ pac.id_pompe_a_chaleur }}">
+
+    <div class="form-group">
+        <label for="id_modele">Modèle :</label>
+        <select name="id_modele" id="id_modele" required>
+            {% for modele in modeles %}
+            <option value="{{ modele.Id_modèle }}" {% if modele.Id_modèle==pac.id_modele %}selected{% endif %}>
+                {{ modele.nom_modèle }} - {{ modele.marque }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="puissance">Puissance (kW) :</label>
+        <input type="number" step="0.01" name="puissance" id="puissance" value="{{ pac.puissance }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="eff_energie">Efficacité Énergétique :</label>
+        <input type="number" step="0.01" name="eff_energie" id="eff_energie" value="{{ pac.eff_energie }}">
+    </div>
+
+    <div class="form-group">
+        <label for="classe_energie">Classe Énergie :</label>
+        <select name="classe_energie" id="classe_energie">
+            <option value="A+++" {% if pac.classe_energie=='A+++' %}selected{% endif %}>A+++</option>
+            <option value="A++" {% if pac.classe_energie=='A++' %}selected{% endif %}>A++</option>
+            <option value="A+" {% if pac.classe_energie=='A+' %}selected{% endif %}>A+</option>
+            <option value="A" {% if pac.classe_energie=='A' %}selected{% endif %}>A</option>
+            <option value="B" {% if pac.classe_energie=='B' %}selected{% endif %}>B</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="temp_fonctionnement_cel">Temp. Fonctionnement (°C) :</label>
+        <input type="number" name="temp_fonctionnement_cel" id="temp_fonctionnement_cel"
+            value="{{ pac.temp_fonctionnement_cel }}">
+    </div>
+
+    <div class="form-group">
+        <label for="volume_chauffe">Volume Chauffé (m³) :</label>
+        <input type="number" step="0.01" name="volume_chauffe" id="volume_chauffe" value="{{ pac.volume_chauffe }}">
+    </div>
+
+    <div class="form-group">
+        <label for="eff_saison">Efficacité Saisonnière :</label>
+        <input type="number" step="0.01" name="eff_saison" id="eff_saison" value="{{ pac.eff_saison }}">
+    </div>
+
+    <div class="form-group">
+        <label for="dimensions">Dimensions :</label>
+        <input type="text" name="dimensions" id="dimensions" value="{{ pac.dimensions }}">
+    </div>
+
+    <div class="form-group">
+        <label for="prix_pac">Prix (€) :</label>
+        <input type="number" step="0.01" name="prix_pac" id="prix_pac" value="{{ pac.prix_pac }}" required>
+    </div>
+
+    <button type="submit" class="btn">Enregistrer</button>
+    <a href="/pac/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

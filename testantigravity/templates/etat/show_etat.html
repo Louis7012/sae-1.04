@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block title %}État : Statistiques PAC{% endblock %}
+
+{% block body %}
+<h1>État : Statistiques des Pompes à Chaleur par Modèle</h1>
+
+{% if stats %}
+<table>
+    <thead>
+        <tr>
+            <th>Modèle</th>
+            <th>Marque</th>
+            <th>Nombre de PAC</th>
+            <th>Prix Moyen (€)</th>
+            <th>Puissance Moyenne (kW)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats %}
+        <tr>
+            <td>{{ stat.nom_modele }}</td>
+            <td>{{ stat.marque }}</td>
+            <td>{{ stat.nombre_pac }}</td>
+            <td>{{ stat.prix_moyen }}</td>
+            <td>{{ stat.puissance_moyenne }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune donnée disponible.</p>
+{% endif %}
+{% endblock %}

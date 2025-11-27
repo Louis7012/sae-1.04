@@ -56,7 +56,7 @@ def show_pac():
             prix_pac,
             modele.nom_modele AS modele,
             modele.marque AS marque
-        FROM pompe_à_chaleur
+        FROM pompe_a_chaleur
         JOIN modele ON pompe_a_chaleur.id_modele = modele.id_modele
         ORDER BY id_pompe_a_chaleur;
     '''
@@ -71,7 +71,7 @@ def show_pac():
 @app.route('/pac/add', methods=['GET'])
 def add_pac():
     mycursor = get_db().cursor()
-    sql = '''SELECT Id_modèle, nom_modèle, marque FROM Modèle;'''
+    sql = '''SELECT id_modele, nom_modele, marque FROM modele;'''
     mycursor.execute(sql)
     modeles = mycursor.fetchall()
 
@@ -146,7 +146,7 @@ def edit_pac():
     pac = mycursor.fetchone()
 
     # Charger les modèles
-    sql2 = "SELECT Id_modèle, nom_modèle, marque FROM Modèle;"
+    sql2 = "SELECT Id_modele, nom_modele, marque FROM modele;"
     mycursor.execute(sql2)
     modeles = mycursor.fetchall()
 
@@ -195,7 +195,7 @@ def valid_edit_pac():
 @app.route('/client/show')
 def show_client():
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM Client ORDER BY nom_client;"
+    sql = "SELECT * FROM client ORDER BY nom_client;"
     mycursor.execute(sql)
     clients = mycursor.fetchall()
     return render_template('client/show_client.html', clients=clients)
@@ -221,7 +221,7 @@ def valid_add_client():
 def delete_client():
     id_client = request.args.get('id')
     mycursor = get_db().cursor()
-    sql = "DELETE FROM Client WHERE Id_Client=%s;"
+    sql = "DELETE FROM client WHERE id_client=%s;"
     mycursor.execute(sql, (id_client))
     get_db().commit()
     return redirect('/client/show')
@@ -230,7 +230,7 @@ def delete_client():
 def edit_client():
     id_client = request.args.get('id')
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM Client WHERE Id_Client=%s;"
+    sql = "SELECT * FROM client WHERE id_client=%s;"
     mycursor.execute(sql, (id_client))
     client = mycursor.fetchone()
     return render_template('client/edit_client.html', client=client)
@@ -244,7 +244,7 @@ def valid_edit_client():
     telephone = request.form.get('telephone')
 
     mycursor = get_db().cursor()
-    sql = '''UPDATE Client SET nom_client=%s, prenom_client=%s, adresse=%s, telephone=%s WHERE Id_Client=%s;'''
+    sql = '''UPDATE client SET nom_client=%s, prenom_client=%s, adresse=%s, telephone=%s WHERE id_client=%s;'''
     mycursor.execute(sql, (nom, prenom, adresse, telephone, id_client))
     get_db().commit()
     return redirect('/client/show')

@@ -12,8 +12,8 @@
         <label for="id_modele">Modèle :</label>
         <select name="id_modele" id="id_modele" required>
             {% for modele in modeles %}
-            <option value="{{ modele.Id_modèle }}" {% if modele.Id_modèle==pac.id_modele %}selected{% endif %}>
-                {{ modele.nom_modèle }} - {{ modele.marque }}
+            <option value="{{ modele.id_modele }}" {% if modele.id_modele==pac.id_modele %}selected{% endif %}>
+                {{ modele.nom_modele }} - {{ modele.marque }}
             </option>
             {% endfor %}
         </select>

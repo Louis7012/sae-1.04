@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 
-{% block title %}Modifier un client{% endblock %}
+{% block title %}Modifier un Client{% endblock %}
 
 {% block body %}
-<h1>Modifier un client</h1>
+<h1>Modifier un Client</h1>
 
 <form action="/client/edit" method="post">
-    <input type="hidden" name="id_client" value="{{ client.id_client }}">
+    <input type="hidden" name="id_client" value="{{ client.Id_Client }}">
 
     <div class="form-group">
         <label for="nom_client">Nom :</label>

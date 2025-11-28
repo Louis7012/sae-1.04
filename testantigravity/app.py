@@ -1,21 +1,30 @@
 #! /usr/bin/python
 # -*- coding:utf-8 -*-
 from flask import Flask, request, render_template, redirect, flash
+from flask import session, g
+import pymysql.cursors
 
 app = Flask(__name__)
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
-                                    ## à ajouter
-from flask import session, g
-import pymysql.cursors
 
+# ----------------------------
+# FONCTION : champs vides → NULL
+# ----------------------------
+def empty_to_none(value):
+    return value if value not in ("", None) else None
+
+
+# ----------------------------
+# CONNEXION BDD
+# ----------------------------
 def get_db():
     if 'db' not in g:
-        g.db =  pymysql.connect(
-            host="serveurmysql",                 # à modifier
-            user="lmarting",                     # à modifier
-            password="secret",                # à modifier
-            database="BDD_lmarting",        # à modifier
+        g.db = pymysql.connect(
+            host="serveurmysql",
+            user="lmarting",
+            password="secret",
+            database="BDD_lmarting",
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -27,7 +36,6 @@ def teardown_db(exception):
     if db is not None:
         db.close()
 
-app = Flask(__name__)
 
 # -------------------------------------------
 # PAGE D'ACCUEIL
@@ -66,7 +74,7 @@ def show_pac():
 
 
 # -------------------------------------------
-# AJOUT D'UNE POMPE À CHALEUR (GET)
+# AJOUT D'UNE PAC (GET)
 # -------------------------------------------
 @app.route('/pac/add', methods=['GET'])
 def add_pac():
@@ -79,34 +87,38 @@ def add_pac():
 
 
 # -------------------------------------------
-# AJOUT D'UNE POMPE À CHALEUR (POST)
+# AJOUT D'UNE PAC (POST)
 # -------------------------------------------
 @app.route('/pac/add', methods=['POST'])
 def valid_add_pac():
+    # Récupération des champs et conversion des vides en None
+    puissance = empty_to_none(request.form.get('puissance'))
+    eff_energie = empty_to_none(request.form.get('eff_energie'))
+    classe_energie = empty_to_none(request.form.get('classe_energie'))
+    temp = empty_to_none(request.form.get('temp_fonctionnement_cel'))
+    volume = empty_to_none(request.form.get('volume_chauffe'))
+    eff_saison = empty_to_none(request.form.get('eff_saison'))
+    dimensions = empty_to_none(request.form.get('dimensions'))
+    prix = empty_to_none(request.form.get('prix_pac'))
+    modele = empty_to_none(request.form.get('id_modele'))
 
-    puissance = request.form.get('puissance')
-    eff_energie = request.form.get('eff_energie')
-    classe_energie = request.form.get('classe_energie')
-    temp = request.form.get('temp_fonctionnement_cel')
-    volume = request.form.get('volume_chauffe')
-    eff_saison = request.form.get('eff_saison')
-    dimensions = request.form.get('dimensions')
-    prix = request.form.get('prix_pac')
-    modele = request.form.get('id_modele')
-
-    mycursor = get_db().cursor()
+    # Préparation des paramètres SQL
     tuple_param = (puissance, eff_energie, classe_energie, temp, volume, eff_saison, dimensions, prix, modele)
 
+    # Requête SQL
     sql = '''
     INSERT INTO pompe_a_chaleur
     (puissance, eff_energie, classe_energie, temp_fonctionnement_cel, volume_chauffe, eff_saison, dimensions, prix_pac, id_modele)
     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);
     '''
 
+    # Exécution
+    mycursor = get_db().cursor()
     mycursor.execute(sql, tuple_param)
     get_db().commit()
 
     return redirect('/pac/show')
+
 
 
 # -------------------------------------------
@@ -116,37 +128,34 @@ def valid_add_pac():
 def delete_pac():
 
     id = request.args.get('id')
-
     mycursor = get_db().cursor()
-    tuple_param = (id)
 
     sql = "DELETE FROM pompe_a_chaleur WHERE id_pompe_a_chaleur=%s;"
-    mycursor.execute(sql, tuple_param)
+    mycursor.execute(sql, (id,))
     get_db().commit()
 
     return redirect('/pac/show')
 
 
 # -------------------------------------------
-# MODIFIER UNE POMPE À CHALEUR (GET)
+# MODIFICATION D'UNE PAC (GET)
 # -------------------------------------------
 @app.route('/pac/edit', methods=['GET'])
 def edit_pac():
 
     id = request.args.get('id')
-
     mycursor = get_db().cursor()
 
-    # Charger la PAC à modifier
+    # Charger la PAC
     sql = '''
         SELECT * FROM pompe_a_chaleur
         WHERE id_pompe_a_chaleur=%s;
     '''
-    mycursor.execute(sql, (id))
+    mycursor.execute(sql, (id,))
     pac = mycursor.fetchone()
 
     # Charger les modèles
-    sql2 = "SELECT Id_modele, nom_modele, marque FROM modele;"
+    sql2 = "SELECT id_modele, nom_modele, marque FROM modele;"
     mycursor.execute(sql2)
     modeles = mycursor.fetchall()
 
@@ -154,21 +163,22 @@ def edit_pac():
 
 
 # -------------------------------------------
-# MODIFIER UNE POMPE À CHALEUR (POST)
+# MODIFICATION D'UNE PAC (POST)
 # -------------------------------------------
 @app.route('/pac/edit', methods=['POST'])
 def valid_edit_pac():
 
     id = request.form.get('id')
-    puissance = request.form.get('puissance')
-    eff_energie = request.form.get('eff_energie')
-    classe_energie = request.form.get('classe_energie')
-    temp = request.form.get('temp_fonctionnement_cel')
-    volume = request.form.get('volume_chauffe')
-    eff_saison = request.form.get('eff_saison')
-    dimensions = request.form.get('dimensions')
-    prix = request.form.get('prix_pac')
-    modele = request.form.get('id_modele')
+
+    puissance = empty_to_none(request.form.get('puissance'))
+    eff_energie = empty_to_none(request.form.get('eff_energie'))
+    classe_energie = empty_to_none(request.form.get('classe_energie'))
+    temp = empty_to_none(request.form.get('temp_fonctionnement_cel'))
+    volume = empty_to_none(request.form.get('volume_chauffe'))
+    eff_saison = empty_to_none(request.form.get('eff_saison'))
+    dimensions = empty_to_none(request.form.get('dimensions'))
+    prix = empty_to_none(request.form.get('prix_pac'))
+    modele = empty_to_none(request.form.get('id_modele'))
 
     tuple_param = (puissance, eff_energie, classe_energie, temp, volume, eff_saison, dimensions, prix, modele, id)
 
@@ -181,21 +191,23 @@ def valid_edit_pac():
     '''
 
     mycursor = get_db().cursor()
-    mycursor.execute(sql, tuple_param)
 
-    get_db().commit()
+    try:
+        mycursor.execute(sql, tuple_param)
+        get_db().commit()
+    except Exception as e:
+        print("Erreur SQL :", e)
 
     return redirect('/pac/show')
 
 
-
 # -------------------------------------------
-# GESTION DES CLIENTS
+# CLIENTS
 # -------------------------------------------
 @app.route('/client/show')
 def show_client():
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM client ORDER BY nom_client;"
+    sql = "SELECT * FROM client ORDER BY id_client;"
     mycursor.execute(sql)
     clients = mycursor.fetchall()
     return render_template('client/show_client.html', clients=clients)
@@ -222,7 +234,7 @@ def delete_client():
     id_client = request.args.get('id')
     mycursor = get_db().cursor()
     sql = "DELETE FROM client WHERE id_client=%s;"
-    mycursor.execute(sql, (id_client))
+    mycursor.execute(sql, (id_client,))
     get_db().commit()
     return redirect('/client/show')
 
@@ -231,7 +243,7 @@ def edit_client():
     id_client = request.args.get('id')
     mycursor = get_db().cursor()
     sql = "SELECT * FROM client WHERE id_client=%s;"
-    mycursor.execute(sql, (id_client))
+    mycursor.execute(sql, (id_client,))
     client = mycursor.fetchone()
     return render_template('client/edit_client.html', client=client)
 
@@ -250,9 +262,8 @@ def valid_edit_client():
     return redirect('/client/show')
 
 
-
 # -------------------------------------------
-# ETAT : STATISTIQUES
+# ETATS / STATISTIQUES
 # -------------------------------------------
 @app.route('/etat/show')
 def show_etat():
@@ -273,5 +284,8 @@ def show_etat():
     return render_template('etat/show_etat.html', stats=stats)
 
 
+# -------------------------------------------
+# LANCEMENT SERVEUR
+# -------------------------------------------
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

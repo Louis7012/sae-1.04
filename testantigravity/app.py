@@ -317,7 +317,7 @@ def delete_intervention():
 
 # -------------------------------------------
 # STATISTIQUES DES INTERVENTIONS
-# -------------------------------------------
+# --------------------------------
 
 @app.route('/interventions/etats')
 def show_etat_interventions():
@@ -334,8 +334,188 @@ def show_etat_interventions():
     print(stats)
     return render_template('/interventions/etats_interventions.html', stats=stats)
 
-# -------------------------------------------
+
+
+
+
+# Partie de Robin
+
+@app.route('/ligne_de_commande/delete')
+def delete_ligne_de_commande():
+    id_ligne = request.args.get('id')
+    print(id_ligne)
+
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM ligne_de_commande WHERE id_ligne_de_commande=%s;"
+    mycursor.execute(sql, (id_ligne,))
+    get_db().commit()
+
+    return redirect('/ligne_de_commande/show')
+
+
+@app.route('/ligne_de_commande/add', methods=['GET'])
+def add_ligne_de_commande():
+    return render_template('ligne_de_commande/add_ligne_de_commande.html')
+
+@app.route('/ligne_de_commande/add', methods=['POST'])
+def valid_add_ligne_de_commande():
+    date_livraison = request.form.get('date_livraison')
+    quantite = request.form.get('quantite')
+    id_pompe_a_chaleur = request.form.get('id_pompe_a_chaleur')
+
+    mycursor = get_db().cursor()
+    sql = '''
+        INSERT INTO ligne_de_commande (date_livraison, quantite, id_pompe_a_chaleur)
+        VALUES (%s, %s, %s);
+    '''
+    mycursor.execute(sql, (date_livraison, quantite, id_pompe_a_chaleur))
+    get_db().commit()
+
+    return redirect('/ligne_de_commande/show')
+
+
+@app.route('/ligne_de_commande/edit', methods=['GET'])
+def edit_ligne_de_commande():
+    id_ligne = request.args.get('id')
+
+    mycursor = get_db().cursor(dictionary=True)
+
+    # Récupération de la ligne à modifier
+    sql = "SELECT * FROM ligne_de_commande WHERE id_ligne_de_commande=%s;"
+    mycursor.execute(sql, (id_ligne,))
+    ligne_de_commande = mycursor.fetchone()
+
+    # Récupération des pompes à chaleur pour le choix
+    sql = "SELECT id_pompe_a_chaleur FROM pompe_a_chaleur;"
+    mycursor.execute(sql)
+    pompes = mycursor.fetchall()
+
+    return render_template(
+        'ligne_de_commande/edit_ligne_de_commande.html',
+        ligne_de_commande=ligne_de_commande,
+        pompes=pompes
+    )
+
+
+@app.route('/ligne_de_commande/edit', methods=['POST'])
+def valid_edit_ligne_de_commande():
+    id_ligne_de_commande = request.form.get('id_ligne_de_commande')
+    date_livraison = request.form.get('date_livraison')
+    quantite = request.form.get('quantite')
+    id_pompe_a_chaleur = request.form.get('id_pompe_a_chaleur')
+
+    mycursor = get_db().cursor()
+
+    sql = """
+        UPDATE ligne_de_commande
+        SET date_livraison=%s,
+            quantite=%s,
+            id_pompe_a_chaleur=%s
+        WHERE id_ligne_de_commande=%s;
+    """
+
+    mycursor.execute(sql, (date_livraison, quantite, id_pompe_a_chaleur, id_ligne_de_commande))
+    get_db().commit()
+
+    return redirect('/ligne_de_commande/show')
+
+
+@app.route('/ligne_de_commande/show')
+def show_ligne_de_commande():
+    mycursor = get_db().cursor(dictionary=True)
+
+    sql = """
+        SELECT 
+            id_ligne_de_commande,
+            date_livraison,
+            quantite,
+            id_pompe_a_chaleur
+        FROM ligne_de_commande;
+    """
+    mycursor.execute(sql)
+    ligne_de_commande = mycursor.fetchall()
+
+    return render_template(
+        'ligne_de_commande/show_ligne_de_commande.html',
+        ligne_de_commande=ligne_de_commande
+    )
+
+@app.route('/etat_ligne_de_commande/show')
+def show_etat_ligne_de_commande():
+
+    mycursor = get_db().cursor()
+    cursor = mycursor.cursor(dictionary=True)
+
+    # c'est la quantités totales livrées par pompe à chaleur
+    cursor.execute("""
+        SELECT 
+            id_pompe_a_chaleur,
+            SUM(quantite) AS total_livre
+        FROM ligne_de_commande
+        GROUP BY id_pompe_a_chaleur
+        ORDER BY total_livre DESC;
+    """)
+    totaux_pac = cursor.fetchall()
+
+    # c'est le classement des commandes par date de livraison
+    cursor.execute("""
+        SELECT 
+            id_ligne_de_commande,
+            date_livraison,
+            quantite,
+            id_pompe_a_chaleur
+        FROM ligne_de_commande
+        ORDER BY date_livraison ASC;
+    """)
+    classement_commandes = cursor.fetchall()
+
+    # c'est la somme totale de toutes les livraisons
+    cursor.execute("""
+        SELECT 
+            SUM(quantite) AS somme_totale_livraisons
+        FROM ligne_de_commande;
+    """)
+    somme_totale = cursor.fetchone()["somme_totale_livraisons"]
+
+    # c'est le détails enrichis des lignes de commande
+    cursor.execute("""
+        SELECT 
+            id_ligne_de_commande,
+            date_livraison,
+            quantite,
+            ligne_de_commande.id_pompe_a_chaleur,
+            nom_modele,
+            marque,
+            prix_pac
+        FROM ligne_de_commande
+        JOIN pompe_a_chaleur 
+            ON ligne_de_commande.id_pompe_a_chaleur = pompe_a_chaleur.id_pompe_a_chaleur
+        JOIN modele 
+            ON pompe_a_chaleur.id_modele = modele.id_modele;
+    """)
+    details_lignes = cursor.fetchall()
+
+    cursor.close()
+    mycursor.close()
+
+    return render_template(
+        "show_etat_ligne_de_commande.html",
+        totaux_pac=totaux_pac,
+        classement_commandes=classement_commandes,
+        somme_totale=somme_totale,
+        details_lignes=details_lignes
+    )
+
+
+
+
+
+
+
+
+
+
 # LANCEMENT SERVEUR
-# -------------------------------------------
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

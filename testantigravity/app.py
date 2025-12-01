@@ -25,6 +25,7 @@ def teardown_db(exception):
     if db is not None:
         db.close()
 
+
 @app.route('/')
 def show_layout():
     return render_template('layout.html')
@@ -69,7 +70,6 @@ def add_pac():
 # -------------------------------------------
 @app.route('/pac/add', methods=['POST'])
 def valid_add_pac():
-
     # valeurs = peu importe si vide → MySQL accepte NULL
     values = (
         request.form.get('puissance') or None,
@@ -90,21 +90,23 @@ def valid_add_pac():
      volume_chauffe, eff_saison, dimensions, prix_pac, id_modele)
     VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);
     '''
+    message="Pompe a chaleur ajouté : " + request.form.get('id_modele') +" puissance : " + request.form.get('puissance') + "température" + request.form.get('temp_fonctionnement_cel') + "volume" + request.form.get('volume_chauffe') + "efficacité saisonnière" + request.form.get('eff_saison') + "dimensions" + request.form.get('dimensions')+ "prix" + request.form.get('prix_pac')
+    flash(message, 'success')
     mycursor.execute(sql, values)
     get_db().commit()
 
     return redirect('/pac/show')
 
 
-
 @app.route('/pac/delete')
 def delete_pac():
-    id = request.args.get('id')
-
+    id = int(request.args.get('id'))
     mycursor = get_db().cursor()
-    mycursor.execute("DELETE FROM pompe_a_chaleur WHERE id_pompe_a_chaleur=%s;", (id,))
+    requete1=f"DELETE FROM intervention WHERE id_pompe_a_chaleur={id};"
+    mycursor.execute( requete1 )
+    message="Pompe a chaleur supprimé : " + request.form.get('id_modele')
+    flash(message, 'success')
     get_db().commit()
-
     return redirect('/pac/show')
 
 
@@ -128,7 +130,6 @@ def edit_pac():
 
 @app.route('/pac/edit', methods=['POST'])
 def valid_edit_pac():
-
     values = (
         request.form.get('puissance') or None,
         request.form.get('eff_energie') or None,
@@ -150,72 +151,35 @@ def valid_edit_pac():
         WHERE id_pompe_a_chaleur=%s;
     '''
 
+    message="Pompe a chaleur modifié : " + request.form.get('id_modele') +" puissance : " + request.form.get('puissance') + "température" + request.form.get('temp_fonctionnement_cel') + "volume" + request.form.get('volume_chauffe') + "efficacité saisonnière" + request.form.get('eff_saison') + "dimensions" + request.form.get('dimensions')+ "prix" + request.form.get('prix_pac')
+    flash(message, 'success')
     mycursor = get_db().cursor()
     mycursor.execute(sql, values)
     get_db().commit()
 
     return redirect('/pac/show')
 
-
+#--------------------------------------------
+# ETATS / STATISTIQUES
 # -------------------------------------------
-# CLIENTS
-# -------------------------------------------
-@app.route('/client/show')
-def show_client():
+@app.route('/etat/show')
+def show_etat():
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM client ORDER BY id_client;"
+    sql = '''
+        SELECT 
+            modele.nom_modele,
+            modele.marque,
+            COUNT(pompe_a_chaleur.id_pompe_a_chaleur) AS nombre_pac,
+            AVG(pompe_a_chaleur.prix_pac) AS prix_moyen,
+            AVG(pompe_a_chaleur.puissance) AS puissance_moyenne
+        FROM pompe_a_chaleur
+        JOIN modele ON pompe_a_chaleur.id_modele = modele.id_modele
+        GROUP BY modele.nom_modele, modele.marque;
+    '''
     mycursor.execute(sql)
-    clients = mycursor.fetchall()
-    return render_template('client/show_client.html', clients=clients)
+    stats = mycursor.fetchall()
+    return render_template('etat/show_etat.html', stats=stats)
 
-@app.route('/client/add', methods=['GET'])
-def add_client():
-    return render_template('client/add_client.html')
-
-@app.route('/client/add', methods=['POST'])
-def valid_add_client():
-    nom = request.form.get('nom_client')
-    prenom = request.form.get('prenom_client')
-    adresse = request.form.get('adresse')
-    telephone = request.form.get('telephone')
-
-    mycursor = get_db().cursor()
-    sql = "INSERT INTO Client (nom_client, prenom_client, adresse, telephone) VALUES (%s, %s, %s, %s);"
-    mycursor.execute(sql, (nom, prenom, adresse, telephone))
-    get_db().commit()
-    return redirect('/client/show')
-
-@app.route('/client/delete')
-def delete_client():
-    id_client = request.args.get('id')
-    mycursor = get_db().cursor()
-    sql = "DELETE FROM client WHERE id_client=%s;"
-    mycursor.execute(sql, (id_client,))
-    get_db().commit()
-    return redirect('/client/show')
-
-@app.route('/client/edit', methods=['GET'])
-def edit_client():
-    id_client = request.args.get('id')
-    mycursor = get_db().cursor()
-    sql = "SELECT * FROM client WHERE id_client=%s;"
-    mycursor.execute(sql, (id_client,))
-    client = mycursor.fetchone()
-    return render_template('client/edit_client.html', client=client)
-
-@app.route('/client/edit', methods=['POST'])
-def valid_edit_client():
-    id_client = request.form.get('id_client')
-    nom = request.form.get('nom_client')
-    prenom = request.form.get('prenom_client')
-    adresse = request.form.get('adresse')
-    telephone = request.form.get('telephone')
-
-    mycursor = get_db().cursor()
-    sql = '''UPDATE client SET nom_client=%s, prenom_client=%s, adresse=%s, telephone=%s WHERE id_client=%s;'''
-    mycursor.execute(sql, (nom, prenom, adresse, telephone, id_client))
-    get_db().commit()
-    return redirect('/client/show')
 
 # -------------------------------------------
 # INTERVENTIONS
@@ -369,28 +333,6 @@ def show_etat_interventions():
     stats = mycursor.fetchall()
     print(stats)
     return render_template('/interventions/etats_interventions.html', stats=stats)
-
-# -------------------------------------------
-# ETATS / STATISTIQUES
-# -------------------------------------------
-@app.route('/etat/show')
-def show_etat():
-    mycursor = get_db().cursor()
-    sql = '''
-        SELECT 
-            modele.nom_modele,
-            modele.marque,
-            COUNT(pompe_a_chaleur.id_pompe_a_chaleur) AS nombre_pac,
-            AVG(pompe_a_chaleur.prix_pac) AS prix_moyen,
-            AVG(pompe_a_chaleur.puissance) AS puissance_moyenne
-        FROM pompe_a_chaleur
-        JOIN modele ON pompe_a_chaleur.id_modele = modele.id_modele
-        GROUP BY modele.nom_modele, modele.marque;
-    '''
-    mycursor.execute(sql)
-    stats = mycursor.fetchall()
-    return render_template('etat/show_etat.html', stats=stats)
-
 
 # -------------------------------------------
 # LANCEMENT SERVEUR

@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS commande;
 DROP TABLE IF EXISTS ligne_de_commande;
 DROP TABLE IF EXISTS filleul;
 DROP TABLE IF EXISTS intervention;
-DROP TABLE IDROP TABLE IF EXISTS parraine;
+DROP TABLE IF EXISTS parraine;
 DROP TABLE IF EXISTS commande;
 DROP TABLE IF EXISTS ligne_de_commande;
 DROP TABLE IF EXISTS filleul;
@@ -52,14 +52,14 @@ CREATE TABLE motif(
 
 CREATE TABLE pompe_a_chaleur(
    id_pompe_a_chaleur INT AUTO_INCREMENT,
-   puissance DECIMAL(15,2),
-   eff_energie DECIMAL(15,2),
-   classe_energie VARCHAR(10),
-   temp_fonctionnement_cel INT,
-   volume_chauffe DECIMAL(15,2),
-   eff_saison DECIMAL(15,2),
-   dimensions VARCHAR(50),
-   prix_pac DECIMAL(15,2),
+   puissance DECIMAL(15,2) NULL,
+   eff_energie DECIMAL(15,2) NULL,
+   classe_energie VARCHAR(10) NULL,
+   temp_fonctionnement_cel INT(15,2) NULL,
+   volume_chauffe DECIMAL(15,2) NULL,
+   eff_saison DECIMAL(15,2) NULL,
+   dimensions VARCHAR(50) NULL,
+   prix_pac DECIMAL(15,2) NULL,
    id_modele INT NOT NULL,
    PRIMARY KEY(id_pompe_a_chaleur),
    FOREIGN KEY(id_modele) REFERENCES modele(id_modele)

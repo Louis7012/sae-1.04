@@ -499,7 +499,7 @@ def show_etat_ligne_de_commande():
     mycursor.close()
 
     return render_template(
-        "show_etat_ligne_de_commande.html",
+        "ligne_de_commande/show_etat_ligne_de_commande.html",
         totaux_pac=totaux_pac,
         classement_commandes=classement_commandes,
         somme_totale=somme_totale,

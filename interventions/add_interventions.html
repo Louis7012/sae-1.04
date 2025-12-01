@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"  href="{{ url_for('static', filename='img/favicon_pompair.ico') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_SAE.css') }}" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Ajouter une intervention - Pomp'Air</title>
+</head>
+<body>
+<div class="container mt-4">
+    <h1>Formulaire d'Intervention</h1>
+    <form action="/interventions/add" method="post">
+        <!-- Champs pour saisir les informations de l'étudiant -->
+
+        <div class="mb-3">
+            <label for="date" class="form-label">Date d'intervention :</label>
+            <input type="date" class="form-control" id="date" placeholder="Entrez la date d'intervention" required name="date">
+        </div>
+        <div class="mb-3">
+            <label for="modele" class="form-label">Modèle de pompe à chaleur :</label>
+            <select class="form-select" id="modele" required name="modele">
+                <option value="">Sélectionnez un modèle</option>
+                {% for type in modeles %}
+                    <option value="{{ type.id_modele }}"> {{ type.nom_modele }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="personnel" class="form-label">Nom du personnel internvenu :</label>
+            <select class="form-select" id="personnel" required name="personnel">
+                <option value="">Sélectionnez un membre du personnel</option>
+                {% for type in personnel %}
+                    <option value="{{ type.id_personnel }}"> {{ type.nom_personnel }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="motif" class="form-label">Motif de l'intervention :</label>
+            <select class="form-select" id="motif" required name="motif">
+                <option value="">Sélectionnez un motif</option>
+                {% for type in motifs %}
+                    <option value="{{ type.id_motif }}"> {{ type.libelle_motif }} </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="client" class="form-label">Nom du client :</label>
+            <select class="form-select" id="client" required name="client">
+                <option value="">Sélectionnez un client</option>
+                {% for type in clients %}
+                    <option value="{{ type.id_client }}"> {{ type.nom_client }} {{ type.prenom_client }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+</div>
+
+<!-- Inclure Bootstrap 5 JS (pour les fonctionnalités supplémentaires) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

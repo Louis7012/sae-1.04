@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"  href="{{ url_for('static', filename='img/favicon_pompair.ico') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles_SAE.css') }}" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <title>Liste des interventions - Pomp'Air</title>
+</head>
+<body>
+{% include('nav.html') %}
+
+<h1>Listes des interventions :</h1>
+<br>
+
+<a class="btn btn-dark" href="/interventions/add" >Ajouter une intervention</a> - <a class="btn btn-dark" href="/interventions/etats" >Voir les états</a>
+<br>
+<br>
+
+{% if interventions | length >= 1 %}
+    <table>
+        <tr>
+            <th>ID</th><th>Date (AAAA/MM/JJ)</th><th>ID Pompe à chaleur</th><th>ID Personnel</th><th>ID Motif</th><th>ID Client</th><th>Actions</th>
+        </tr>
+        {% for inter in interventions %}
+            <tr>
+                <td>{{ inter.id_intervention }}</td>
+                <td>{{ inter.date_inter }}</td>
+                <td>{{ inter.id_pompe_a_chaleur }}</td>
+                <td>{{ inter.id_personnel }}</td>
+                <td>{{ inter.id_motif }}</td>
+                <td>{{ inter.id_client }}</td>
+                <td>
+                    <a class="btn btn-warning" href="/inerventions/edit?id={{ inter.id_intervention }}">Modifier</a>&nbsp;
+                    <a class="btn btn-danger" href="/interventions/delete?id={{ inter.id_intervention }}">Supprimer</a>&nbsp;
+                  </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2> La liste des interventions est vide.</h2>
+{% endif %}
+</body>
+</html>

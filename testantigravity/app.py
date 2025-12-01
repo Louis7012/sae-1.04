@@ -319,7 +319,7 @@ def delete_intervention():
 # STATISTIQUES DES INTERVENTIONS
 # --------------------------------
 
-@app.route('/interventions/etats')
+@app.route('/etat/etats')
 def show_etat_interventions():
     mycursor = get_db().cursor()
     sql = '''

@@ -20,7 +20,10 @@
 
     <div class="mb-3">
         <label for="id_pompe_a_chaleur">Identifiant de la pompe a chaleur :</label>
-        <input type="text" name="id_pompe_a_chaleur" id="id_pompe_a_chaleur" value="{{ ligne_de_commande.id_pompe_a_chaleur }}">
+         {% for type in pompes %}
+                    <option value="{{ type.id_pompe_a_chaleur }}"
+                    {% if type.id_pompe_a_chaleur ==  ligne_de_commande.id_pompe_a_chaleur %}selected{% endif %}> {{ type.id_pompe_a_chaleur }}</option>
+                {% endfor %}
     </div>
 
     <button type="submit" class="btn">Enregistrer</button>

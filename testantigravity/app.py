@@ -30,6 +30,9 @@ def teardown_db(exception):
 def show_layout():
     return render_template('layout.html')
 
+# -------------------------------------------
+# Show
+# -------------------------------------------
 
 @app.route('/pac/show')
 def show_pac():
@@ -55,6 +58,9 @@ def show_pac():
     liste_pac = mycursor.fetchall()
     return render_template('pac/show_pac.html', pompes=liste_pac)
 
+# -------------------------------------------
+# Add
+# -------------------------------------------
 
 @app.route('/pac/add', methods=['GET'])
 def add_pac():
@@ -64,65 +70,74 @@ def add_pac():
     modeles = mycursor.fetchall()
     return render_template('pac/add_pac.html', modeles=modeles)
 
-
-# -------------------------------------------
-# AJOUT D'UNE PAC (POST)
-# -------------------------------------------
 @app.route('/pac/add', methods=['POST'])
 def valid_add_pac():
-    # valeurs = peu importe si vide → MySQL accepte NULL
     values = (
-        request.form.get('puissance') or None,
-        request.form.get('eff_energie') or None,
-        request.form.get('classe_energie') or None,
-        request.form.get('temp_fonctionnement_cel') or None,
-        request.form.get('volume_chauffe') or None,
-        request.form.get('eff_saison') or None,
-        request.form.get('dimensions') or None,
-        request.form.get('prix_pac') or None,
+        request.form.get('puissance'),
+        request.form.get('eff_energie'),
+        request.form.get('classe_energie'),
+        request.form.get('temp_fonctionnement_cel'),
+        request.form.get('volume_chauffe'),
+        request.form.get('eff_saison'),
+        request.form.get('dimensions'),
+        request.form.get('prix_pac'),
         request.form.get('id_modele')
     )
 
     mycursor = get_db().cursor()
     sql = '''
-    INSERT INTO pompe_a_chaleur
-    (puissance, eff_energie, classe_energie, temp_fonctionnement_cel, 
-     volume_chauffe, eff_saison, dimensions, prix_pac, id_modele)
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);
+        INSERT INTO pompe_a_chaleur
+        (puissance, eff_energie, classe_energie, temp_fonctionnement_cel, 
+         volume_chauffe, eff_saison, dimensions, prix_pac, id_modele)
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);
     '''
-    message="Pompe a chaleur ajouté : " + request.form.get('id_modele') +" puissance : " + request.form.get('puissance') + "température" + request.form.get('temp_fonctionnement_cel') + "volume" + request.form.get('volume_chauffe') + "efficacité saisonnière" + request.form.get('eff_saison') + "dimensions" + request.form.get('dimensions')+ "prix" + request.form.get('prix_pac')
-    flash(message, 'success')
     mycursor.execute(sql, values)
     get_db().commit()
 
-    return redirect('/pac/show')
-
-
-@app.route('/pac/delete')
-def delete_pac():
-    id = int(request.args.get('id'))
-    mycursor = get_db().cursor()
-    requete1=f"DELETE FROM intervention WHERE id_pompe_a_chaleur={id};"
-    mycursor.execute( requete1 )
-    message="Pompe a chaleur supprimé : " + request.form.get('id_modele')
+    message = (
+        f"Pompe à chaleur ajoutée — modèle: {request.form.get('id_modele')}, "
+        f"puissance: {request.form.get('puissance')}, "
+        f"température: {request.form.get('temp_fonctionnement_cel')}, "
+        f"volume: {request.form.get('volume_chauffe')}, "
+        f"eff saison: {request.form.get('eff_saison')}, "
+        f"dimensions: {request.form.get('dimensions')}, "
+        f"prix: {request.form.get('prix_pac')}"
+    )
     flash(message, 'success')
-    get_db().commit()
     return redirect('/pac/show')
 
+# -------------------------------------------
+# Delete
+# -------------------------------------------
+
+@app.route('/pac/delete') 
+def delete_pac(): 
+    id = int(request.args.get('id')) 
+    mycursor = get_db().cursor() 
+    sql_delete_interv = "DELETE FROM intervention WHERE id_pompe_a_chaleur=%s;" 
+    mycursor.execute(sql_delete_interv, (id,)) 
+    sql_delete_pac = "DELETE FROM pompe_a_chaleur WHERE id_pompe_a_chaleur=%s;" 
+    mycursor.execute(sql_delete_pac, (id,)) 
+    get_db().commit() 
+    message = "Pompe à chaleur supprimée : " + str(id) 
+    flash(message, 'success') 
+    return redirect('/pac/show')
+
+# -------------------------------------------
+# Edit
+# -------------------------------------------
 
 @app.route('/pac/edit', methods=['GET'])
 def edit_pac():
     id = request.args.get('id')
     mycursor = get_db().cursor()
 
-    # PAC
-    sql = 'SELECT * FROM pompe_a_chaleur WHERE id_pompe_a_chaleur=%s;'
-    mycursor.execute(sql, (id,))
+    sql_pac = 'SELECT * FROM pompe_a_chaleur WHERE id_pompe_a_chaleur=%s;'
+    mycursor.execute(sql_pac, (id,))
     pac = mycursor.fetchone()
 
-    # modèles
-    sql2 = "SELECT id_modele, nom_modele, marque FROM modele;"
-    mycursor.execute(sql2)
+    sql_modeles = "SELECT id_modele, nom_modele, marque FROM modele;"
+    mycursor.execute(sql_modeles)
     modeles = mycursor.fetchall()
 
     return render_template('pac/edit_pac.html', pac=pac, modeles=modeles)
@@ -131,14 +146,14 @@ def edit_pac():
 @app.route('/pac/edit', methods=['POST'])
 def valid_edit_pac():
     values = (
-        request.form.get('puissance') or None,
-        request.form.get('eff_energie') or None,
-        request.form.get('classe_energie') or None,
-        request.form.get('temp_fonctionnement_cel') or None,
-        request.form.get('volume_chauffe') or None,
-        request.form.get('eff_saison') or None,
-        request.form.get('dimensions') or None,
-        request.form.get('prix_pac') or None,
+        request.form.get('puissance'),
+        request.form.get('eff_energie'),
+        request.form.get('classe_energie'),
+        request.form.get('temp_fonctionnement_cel'),
+        request.form.get('volume_chauffe'),
+        request.form.get('eff_saison'),
+        request.form.get('dimensions'),
+        request.form.get('prix_pac'),
         request.form.get('id_modele'),
         request.form.get('id')
     )
@@ -151,17 +166,26 @@ def valid_edit_pac():
         WHERE id_pompe_a_chaleur=%s;
     '''
 
-    message="Pompe a chaleur modifié : " + request.form.get('id_modele') +" puissance : " + request.form.get('puissance') + "température" + request.form.get('temp_fonctionnement_cel') + "volume" + request.form.get('volume_chauffe') + "efficacité saisonnière" + request.form.get('eff_saison') + "dimensions" + request.form.get('dimensions')+ "prix" + request.form.get('prix_pac')
-    flash(message, 'success')
     mycursor = get_db().cursor()
     mycursor.execute(sql, values)
     get_db().commit()
 
+    message = (
+        f"Pompe à chaleur modifiée — modèle: {request.form.get('id_modele')}, "
+        f"puissance: {request.form.get('puissance')}, "
+        f"température: {request.form.get('temp_fonctionnement_cel')}, "
+        f"volume: {request.form.get('volume_chauffe')}, "
+        f"eff saison: {request.form.get('eff_saison')}, "
+        f"dimensions: {request.form.get('dimensions')}, "
+        f"prix: {request.form.get('prix_pac')}"
+    )
+    flash(message, 'success')
     return redirect('/pac/show')
 
 #--------------------------------------------
-# ETATS / STATISTIQUES
+# Etat
 # -------------------------------------------
+
 @app.route('/etat/show')
 def show_etat():
     mycursor = get_db().cursor()

@@ -323,7 +323,7 @@ def delete_intervention():
 def show_etat_interventions():
     mycursor = get_db().cursor()
     sql = '''
-        SELECT personnel.id_personnel, AVG(intervention.date_inter) AS moyen_date, personnel.nom_personnel
+        SELECT personnel.id_personnel, FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(date_inter))) AS moyen_date, personnel.nom_personnel
         FROM personnel
         JOIN intervention ON intervention.id_personnel = personnel.id_personnel
         GROUP BY personnel.id_personnel, personnel.nom_personnel

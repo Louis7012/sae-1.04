@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}Ajouter une ligne de commande{% endblock %}
+
+{% block body %}
+<h1>Ajouter une ligne de commande</h1>
+
+<form action="/ligne_de_commande/add" method="post">
+
+    <div class="form-group">
+        <label for="date_livraison">Date de la livraison :</label>
+        <input type="date" name="date_livraison" id="date_livraison" required>
+    </div>
+
+    <div class="form-group">
+        <label for="quantite">Quantité :</label>
+        <input type="number" name="quantite" id="quantite">
+    </div>
+
+    <div class="form-group">
+        <label for="id_pompe_a_chaleur">Identifiant de la pompe à chaleur :</label>
+        <input type="text" name="id_pompe_a_chaleur" id="id_pompe_a_chaleur">
+    </div>
+
+    <button type="submit" class="btn">Ajouter</button>
+    <a href="/id_ligne_de_commande/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

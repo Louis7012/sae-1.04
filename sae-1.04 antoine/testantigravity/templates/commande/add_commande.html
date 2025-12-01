@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block title %}Ajouter une commande{% endblock %}
+
+{% block body %}
+<h1>Ajouter une commande</h1>
+
+<form action="/commande/add" method="post">
+
+    <div class="form-group">
+        <label for="prix_cmd">Prix de la commande :</label>
+        <input type="number" name="prix_cmd" id="prix_cmd" required>
+    </div>
+
+    <div class="form-group">
+        <label for="date_cmd">Date de commande :</label>
+        <input type="date" name="date_cmd" id="date_cmd">
+    </div>
+
+    <div class="form-group">
+
+
+        <select class="form-group" name="id_ligne_de_commande" required>
+            <option value="">Sélectionner une ligne de commande</option>
+                {% for ligne in liste_ligne_de_commande%}
+                    <option value="{{ ligne.id_ligne_de_commande}}"> {{ ligne.id_ligne_de_commande}} </option>
+                {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+
+
+        <select class="form-group" name="id_client" required>
+            <option value="">Sélectionner un client</option>
+                {% for ligne in clients%}
+                    <option value="{{ ligne.id_client}}"> {{ ligne.id_client}} ({{ ligne.prenom_client }} {{  ligne.nom_client }}) </option>
+                {% endfor %}
+        </select>
+    </div>
+
+
+    <button type="submit" class="btn">Ajouter</button>
+    <a href="/commande/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

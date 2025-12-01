@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block title %}Liste des Pompes à Chaleur{% endblock %}
+
+{% block body %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Nos Pompes à Chaleur</h1>
+    <a href="/pac/add" class="btn">Ajouter une PAC</a>
+</div>
+
+{% if pompes %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Modèle</th>
+            <th>Marque</th>
+            <th>Puissance (kW)</th>
+            <th>Prix (€)</th>
+            <th>Classe Énergie</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pac in pompes %}
+        <tr>
+            <td>{{ pac.id }}</td>
+            <td>{{ pac.modele }}</td>
+            <td>{{ pac.marque }}</td>
+            <td>{{ pac.puissance }}</td>
+            <td>{{ pac.prix_pac }}</td>
+            <td><span style="background-color: #27ae60; color: white; padding: 2px 6px; border-radius: 4px;">{{
+                    pac.classe_energie }}</span></td>
+            <td>
+                <a href="/pac/edit?id={{ pac.id }}" class="btn btn-small">Modifier</a>
+                <a href="/pac/delete?id={{ pac.id }}" class="btn btn-small btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune pompe à chaleur enregistrée pour le moment.</p>
+{% endif %}
+{% endblock %}

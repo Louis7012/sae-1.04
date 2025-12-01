@@ -1,0 +1,25 @@
+Quantités totales livrées par pompe à chaleur
+
+SELECT 
+    id_pompe_a_chaleur,
+    SUM(quantité) AS total_livre
+FROM ligne_de_commande
+GROUP BY id_pompe_a_chaleur
+ORDER BY total_livre DESC;
+
+Classement des commandes par date de livraison
+
+SELECT 
+    id_ligne_de_commande,
+    date_livraison,
+    quantité,
+    id_pompe_a_chaleur
+FROM ligne_de_commande
+ORDER BY date_livraison ASC;
+
+
+
+Somme totale de toutes les livraisons
+SELECT 
+    SUM(quantité) AS somme_totale_livraisons
+FROM ligne_de_commande;

@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}État : Statistiques des lignes de commandes{% endblock %}
+
+{% block body %}
+<h1>État : Statistiques des lignes de commandes</h1>
+
+<h2>Quantités totales livrées par pompe à chaleur</h2>
+<p>{{ quantite.quantite_totales }}</p>
+
+<h2>Classement des commandes par date de livraison</h2>
+<p>{{ date_livraison.classement_commandes }}</p>
+
+<h2>Statistiques des lignes de commandes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>ID Client</th>
+            <th>Total commandes</th>
+            <th>Total prix client</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in stats_clients %}
+        <tr>
+            <td>{{ s.id_client }}</td>
+            <td>{{ s.total_commandes }}</td>
+            <td>{{ s.total_prix_client }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Top 5 des commandes les plus chères</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Prix</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in top5 %}
+        <tr>
+            <td>{{ t.num_commande }}</td>
+            <td>{{ t.prix_cmd }}</td>
+            <td>{{ t.date_cmd }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

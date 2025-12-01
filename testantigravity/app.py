@@ -332,7 +332,7 @@ def show_etat_interventions():
     mycursor.execute(sql)
     stats = mycursor.fetchall()
     print(stats)
-    return render_template('/interventions/etats_interventions.html', stats=stats)
+    return render_template('/etats/etats_interventions.html', stats=stats)
 
 
 

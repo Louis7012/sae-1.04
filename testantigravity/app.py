@@ -242,7 +242,7 @@ def valid_add_intervention():
     flash(message, 'alert-success')
     return redirect('/interventions')
 
-@app.route('/inerventions/edit', methods=['GET'])
+@app.route('/interventions/edit', methods=['GET'])
 def edit_intervention():
     mycursor = get_db().cursor()
     id=request.args.get('id')

@@ -422,7 +422,7 @@ def valid_edit_ligne_de_commande():
 
 @app.route('/ligne_de_commande/show')
 def show_ligne_de_commande():
-    mycursor = get_db().cursor(dictionary=True)
+    mycursor = get_db().cursor()
 
     sql = """
         SELECT 
@@ -444,7 +444,7 @@ def show_ligne_de_commande():
 def show_etat_ligne_de_commande():
 
     mycursor = get_db().cursor()
-    cursor = mycursor.cursor(dictionary=True)
+    cursor = mycursor.cursor()
 
     # c'est la quantités totales livrées par pompe à chaleur
     cursor.execute("""

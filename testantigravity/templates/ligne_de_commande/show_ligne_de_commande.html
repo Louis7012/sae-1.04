@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}Liste des lignes de commandes{% endblock %}
+
+{% block body %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Nos lignes de commandes</h1>
+    <a href="/ligne_de_commande/add" class="btn">Ajouter une ligne de commande</a>
+</div>
+
+{% if ligne_de_commande%}
+<table>
+    <thead>
+        <tr>
+            <th>id de la ligne de commande</th>
+            <th>date de la livraison</th>
+            <th>quantité</th>
+            <th>id de la pompe a chaleur</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ligne in ligne_de_commande %}
+        <tr>
+            <td>{{ ligne.id_ligne_de_commande }}</td>
+            <td>{{ ligne.date_livraison }}</td>
+            <td>{{ ligne.quantite }}</td>
+            <td>{{ ligne.id_pompe_a_chaleur }}</td>
+
+            <td>
+                <a href="/ligne_de_commande/edit?id={{ ligne.id_ligne_de_commande }}" class="btn btn-small">Modifier</a>
+                <a href="/ligne_de_commande/delete?id={{ ligne.id_ligne_de_commande }}" class="btn btn-small btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune ligne de commande enregistré pour le moment.</p>
+{% endif %}
+{% endblock %}

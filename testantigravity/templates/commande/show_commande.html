@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Liste des commandes{% endblock %}
+
+{% block body %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Nos commandes</h1>
+    <a href="/commande/add" class="btn">Ajouter une commande</a>
+</div>
+
+{% if commande%}
+<table>
+    <thead>
+        <tr>
+            <th>numéro de commnde</th>
+            <th>prix</th>
+            <th>date</th>
+            <th>id de la ligne de commande</th>
+            <th>id du client</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ligne in commande %}
+        <tr>
+            <td>{{ ligne.num_commande }}</td>
+            <td>{{ ligne.prix_cmd }}</td>
+            <td>{{ ligne.date_cmd }}</td>
+            <td>{{ ligne.id_ligne_de_commande }}</td>
+            <td>{{ ligne.id_client }}</td>
+            <td>
+                <a href="/commande/edit?id={{ ligne.num_commande }}" class="btn btn-small">Modifier</a>
+                <a href="/commande/delete?id={{ ligne.num_commande }}" class="btn btn-small btn-danger">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>Aucune commande enregistré pour le moment.</p>
+{% endif %}
+{% endblock %}

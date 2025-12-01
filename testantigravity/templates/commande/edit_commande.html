@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}Modifier une commande{% endblock %}
+
+{% block body %}
+<h1>Modifier une commande</h1>
+
+<form action="/commande/edit" method="post">
+    <input type="hidden" name="num_commande" value="{{ commande.num_commande }}">
+
+    <div class="form-group">
+        <label for="prix_cmd">prix de la commande :</label>
+        <input type="text" name="prix_cmd" id="prix_cmd" value="{{ commande.prix_cmd }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="date_cmd">date de la commande :</label>
+        <input type="date" name="date_cmd" id="date_cmd" value="{{ commande.date_cmd }}" required>
+    </div>
+
+
+    <div class="form-group">
+
+
+        <select name="id_ligne_de_commande">
+        {% for ligne in ligne_de_commande %}
+        <option value="{{ ligne.id_ligne_de_commande }}"
+            {% if ligne.id_ligne_de_commande == commande.id_ligne_de_commande %}selected{% endif %}>
+            {{ ligne.id_ligne_de_commande }}
+        </option>
+    {% endfor %}
+</select>
+    </div>
+
+    <div class="form-group">
+
+    <select name="id_client">
+        {% for c in clients %}
+            <option value="{{ c.id_client }}"
+                {% if c.id_client == commande.id_client %}selected{% endif %}>
+                {{ c.id_client }} ({{ c.prenom_client }} {{ c.nom_client }})
+            </option>
+        {% endfor %}
+    </select>
+    </div>
+
+
+    <button type="submit" class="btn">Enregistrer</button>
+    <a href="/commande/show" class="btn" style="background-color: #95a5a6;">Annuler</a>
+</form>
+{% endblock %}

@@ -126,9 +126,6 @@ def edit_pac():
     return render_template('pac/edit_pac.html', pac=pac, modeles=modeles)
 
 
-# -------------------------------------------
-# MODIFICATION D'UNE PAC (POST)
-# -------------------------------------------
 @app.route('/pac/edit', methods=['POST'])
 def valid_edit_pac():
 

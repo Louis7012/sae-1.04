@@ -11,18 +11,22 @@
 <body>
 
     <nav>
-        <a href="/" class="brand">EcoHeat Manager</a>
+        <a href="/" class="brand">Pomp'Air</a>
         <ul>
             <li><a href="/">Accueil</a></li>
             <li><a href="/pac/show">PAC</a></li>
-            <li><a href="/client/show">Clients</a></li>
-            <li><a href="/etat/show">État</a></li>
+            <li><a href="/commande/show">Commande</a></li>
+            <li><a href="/ligne_de_commande/show">Ligne de commande</a></li>
+            <li><a href="/etat_commande/show">État commande</a></li>
+            <li><a href="/etat/show">État Pompes à Chaleur</a></li>
+            <li><a href="/etat_ligne_de_commande/show">État ligne de commande</a></li>
+            <li><a href="/etats_interventions/show">État intervention</a></li>
         </ul>
     </nav>
 
     <div class="container">
         <div style="text-align: center; margin-bottom: 20px; color: #7f8c8d;">
-            <p>Groupe SAE: 19 | TP: A2 | Étudiant: Zaza</p>
+            <p>Groupe SAE: 14 | TP: C1 | Étudiants: Antoine, Louis, Guillian, Robin</p>
         </div>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -38,7 +42,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 EcoHeat Manager. Tous droits réservés.</p>
+        <p>&copy; 1985 Pomp'Air. Tous droits réservés.</p>
     </footer>
 
 </body>

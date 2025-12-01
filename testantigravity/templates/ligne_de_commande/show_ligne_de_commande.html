@@ -8,14 +8,14 @@
     <a href="/ligne_de_commande/add" class="btn">Ajouter une ligne de commande</a>
 </div>
 
-{% if ligne_de_commande%}
+{% if ligne_de_commande %}
 <table>
     <thead>
         <tr>
             <th>id de la ligne de commande</th>
             <th>date de la livraison</th>
             <th>quantité</th>
-            <th>id de la pompe a chaleur</th>
+            <th>id de la pompe à chaleur</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -36,6 +36,6 @@
     </tbody>
 </table>
 {% else %}
-<p>Aucune ligne de commande enregistré pour le moment.</p>
+<p>Aucune ligne de commande enregistrée pour le moment.</p>
 {% endif %}
 {% endblock %}

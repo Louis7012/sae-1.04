@@ -511,6 +511,134 @@ def show_etat_ligne_de_commande():
 
 
 
+# GESTION DES COMMANDES
+
+@app.route('/commande/show')
+def show_commande():
+    mycursor = get_db().cursor()
+    sql = "SELECT * FROM commande;"
+    mycursor.execute(sql)
+    commande = mycursor.fetchall()
+    return render_template('commande/show_commande.html', commande=commande)
+
+@app.route('/commande/add', methods=['GET'])
+def add_commande():
+    db = get_db()
+    mycursor = db.cursor()
+    sql='''SELECT ligne_de_commande.id_ligne_de_commande from ligne_de_commande;'''
+    mycursor.execute(sql)
+    ligne_de_commande = mycursor.fetchall()
+    print(ligne_de_commande)
+    sql = ''' SELECT id_client, prenom_client, nom_client from client; '''
+    mycursor.execute(sql)
+    clients = mycursor.fetchall()
+    return render_template('commande/add_commande.html', liste_ligne_de_commande=ligne_de_commande, clients=clients)
+
+@app.route('/commande/add', methods=['POST'])
+def valid_add_commande():
+    prix_cmd = request.form.get('prix_cmd')
+    date_cmd = request.form.get('date_cmd')
+    id_ligne_de_commande = request.form.get('id_ligne_de_commande')
+    id_client = request.form.get('id_client')
+
+    mycursor = get_db().cursor()
+    sql = '''INSERT INTO commande (prix_cmd, date_cmd, id_ligne_de_commande, id_client) VALUES (%s, %s, %s, %s);'''
+    mycursor.execute(sql, (prix_cmd, date_cmd, id_ligne_de_commande, id_client))
+    get_db().commit()
+    return redirect('/commande/show')
+
+@app.route('/commande/delete')
+def delete_commande():
+    num_commande = request.args.get('id')
+    print(num_commande)
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM commande WHERE num_commande=%s;"
+    mycursor.execute(sql, (num_commande,))
+    get_db().commit()
+    return redirect('/commande/show')
+
+@app.route('/commande/edit', methods=['GET'])
+def edit_commande():
+    num_commande = request.args.get('id')
+    mycursor = get_db().cursor()
+    sql = "SELECT * FROM commande WHERE num_commande=%s;"
+    mycursor.execute(sql, (num_commande,))
+    commande = mycursor.fetchone()
+    sql = '''SELECT ligne_de_commande.id_ligne_de_commande from ligne_de_commande;'''
+    mycursor.execute(sql)
+    ligne_de_commande = mycursor.fetchall()
+    sql = ''' SELECT id_client, prenom_client, nom_client from client; '''
+    mycursor.execute(sql)
+    clients = mycursor.fetchall()
+
+
+    return render_template('commande/edit_commande.html', commande=commande, ligne_de_commande=ligne_de_commande, clients=clients)
+
+@app.route('/commande/edit', methods=['POST'])
+def valid_edit_commande():
+    prix_cmd = request.form.get('prix_cmd')
+    date_cmd = request.form.get('date_cmd')
+    id_ligne_de_commande = request.form.get('id_ligne_de_commande')
+    id_client = request.form.get('id_client')
+    num_commande = request.form.get('num_commande')
+
+    mycursor = get_db().cursor()
+    sql = '''UPDATE commande SET prix_cmd=%s, date_cmd=%s, id_ligne_de_commande=%s, id_client=%s WHERE num_commande=%s;'''
+    mycursor.execute(sql, (prix_cmd, date_cmd, id_ligne_de_commande, id_client, num_commande))
+    get_db().commit()
+    return redirect('/commande/show')
+
+
+
+
+# ETAT : STATISTIQUES
+
+
+
+@app.route('/etat_commande/show')
+def show_etat_commande():
+    mycursor = get_db().cursor()
+
+    # 1 — moyenne !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    mycursor.execute('''
+        SELECT AVG(prix_cmd) AS moyenne_prix FROM commande;
+    ''')
+    moyenne = mycursor.fetchone()
+
+    # 2 — total !!!!!!!!!!!!!!!!!!!!!!
+    mycursor.execute('''
+        SELECT SUM(prix_cmd) AS total_prix FROM commande;
+    ''')
+    total = mycursor.fetchone()
+
+    # 3 — stats par client !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    mycursor.execute('''
+        SELECT id_client, COUNT(*) AS total_commandes, SUM(prix_cmd) AS total_prix_client
+        FROM commande
+        GROUP BY id_client;
+    ''')
+    stats_clients = mycursor.fetchall()
+
+    # 4 — top 5 des commandes !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    mycursor.execute('''
+        SELECT num_commande, prix_cmd, date_cmd
+        FROM commande
+        ORDER BY prix_cmd DESC
+        LIMIT 5;
+    ''')
+    top5 = mycursor.fetchall()
+
+    return render_template(
+        'etat/show_etat_commande.html',
+        moyenne=moyenne,
+        total=total,
+        stats_clients=stats_clients,
+        top5=top5
+    )
+
+
+
+
 
 
 

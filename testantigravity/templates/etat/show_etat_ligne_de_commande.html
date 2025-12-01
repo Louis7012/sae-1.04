@@ -1,0 +1,89 @@
+{% extends "layout.html" %}
+
+{% block title %}État : Statistiques des lignes de commandes{% endblock %}
+
+{% block body %}
+<h1>État : Statistiques des lignes de commandes</h1>
+
+<!-- 1. Quantités totales par PAC -->
+<h2>Quantités totales livrées par pompe à chaleur</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID Pompe à Chaleur</th>
+            <th>Total livré</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in totaux_pac %}
+        <tr>
+            <td>{{ row.id_pompe_a_chaleur }}</td>
+            <td>{{ row.total_livre }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- 2. Classement des commandes par date -->
+<h2>Classement des commandes par date de livraison</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID Ligne</th>
+            <th>Date de livraison</th>
+            <th>Quantité</th>
+            <th>ID PAC</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in classement_commandes %}
+        <tr>
+            <td>{{ row.id_ligne_de_commande }}</td>
+            <td>{{ row.date_livraison }}</td>
+            <td>{{ row.quantite }}</td>
+            <td>{{ row.id_pompe_a_chaleur }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<!-- 3. Somme totale de toutes les livraisons -->
+<h2>Somme totale de toutes les livraisons</h2>
+<p><strong>{{ somme_totale }}</strong> unités livrées</p>
+
+
+<!-- 4. Détails enrichis des lignes de commande -->
+<h2>Détails des lignes de commande (avec modèle & prix)</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID Ligne</th>
+            <th>Date Livraison</th>
+            <th>Quantité</th>
+            <th>PAC</th>
+            <th>Modèle</th>
+            <th>Marque</th>
+            <th>Prix</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in details_lignes %}
+        <tr>
+            <td>{{ d.id_ligne_de_commande }}</td>
+            <td>{{ d.date_livraison }}</td>
+            <td>{{ d.quantite }}</td>
+            <td>{{ d.id_pompe_a_chaleur }}</td>
+            <td>{{ d.nom_modele }}</td>
+            <td>{{ d.marque }}</td>
+            <td>{{ d.prix_pac }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
